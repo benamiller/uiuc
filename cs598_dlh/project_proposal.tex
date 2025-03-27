@@ -1,0 +1,110 @@
+\documentclass[twocolumn]{article}
+
+% Packages
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{booktabs}
+
+% Adjust margins
+\usepackage[margin=1in]{geometry}
+
+\title{Reproducing Time-Aware Transformer-based Network for Clinical Notes Series Prediction}
+
+\author{%
+Author
+}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+This paper addresses the reproduction of a Time-Aware Transformer-based Network (TaT-Net) for predicting future clinical notes. We summarize the problem, methodology, proposed extensions, and implementation details for effective reproduction.
+\end{abstract}
+
+\section{Introduction}
+
+\subsection{Problem Statement}
+
+This paper addresses the challenge of predicting future clinical notes from historical patient medical records. Predicting clinical notes can aid healthcare providers in anticipating patient conditions, improving documentation efficiency, and enhancing care continuity. The specific challenge involves modeling semantic content and temporal relationships in sequential clinical notes, addressing complexities such as irregular intervals and medical terminology.
+
+\subsection{Citation}
+
+Zhang, D., Thadajarassiri, J., Sen, C., \& Rundensteiner, E. (2020). Time-Aware Transformer-Based Network for Clinical Notes Series Prediction. \textit{Proceedings of Machine Learning for Healthcare, PMLR 126}, 566–588.
+
+\section{Methodology}
+
+\subsection{Specific Approach}
+
+The authors propose TaT-Net, which extends traditional Transformers to include temporal information. The architecture comprises:
+
+\begin{enumerate}
+    \item \textbf{Time-Aware Attention Mechanism:}
+    \begin{itemize}
+        \item Incorporates temporal embeddings.
+        \item Introduces time-aware positional encoding.
+        \item Adjusts attention scores based on time intervals.
+    \end{itemize}
+    \item \textbf{Hierarchical Architecture:}
+    \begin{itemize}
+        \item Word-level encoder captures semantics.
+        \item Note-level encoder captures inter-note relationships.
+        \item Temporal attention manages irregular intervals.
+    \end{itemize}
+\end{enumerate}
+
+Evaluation metrics include ROUGE scores, Perplexity, BLEU, and medical accuracy through UMLS mapping.
+
+\subsection{Novelty and Relevance}
+
+The novelty lies in explicitly modeling temporal intervals within a Transformer architecture tailored for clinical text. The approach outperforms baselines by modeling irregular intervals, maintaining long-term dependencies, and preserving semantic accuracy.
+
+\subsection{Planned Ablations and Extensions}
+
+Future planned studies include:
+\begin{enumerate}
+    \item \textbf{Alternative Temporal Embeddings:} Testing various temporal encodings and granularity.
+    \item \textbf{Medical Knowledge Integration:} Utilizing pre-trained clinical BERT embeddings and UMLS concept regularization.
+    \item \textbf{Architectural Modifications:} Evaluating alternative attention mechanisms and encoder depths.
+\end{enumerate}
+
+\section{Data Access and Implementation}
+
+\subsection{Dataset and Code Availability}
+
+The dataset, MIMIC-III, is accessible via PhysioNet. Required CITI training has been completed, providing access to discharge summaries and progress notes. Although the authors have not released original code, detailed architecture specifications facilitate reproduction.
+
+\subsection{Computational Feasibility}
+
+Implementation will utilize Google Colab with a T4 GPU:
+\begin{itemize}
+    \item Training: 4–6 hours per epoch.
+    \item GPU memory: ~12GB.
+    \item Data storage: ~30GB (via Google Drive).
+\end{itemize}
+
+The computational setup is within Colab's free-tier constraints, requiring training sessions split due to runtime limits.
+
+\subsection{Code Implementation Strategy}
+
+The reproduction will build upon the official implementation \footnote{https://github.com/zdy93/FTL-Trans} to:
+\begin{itemize}
+    \item Directly verify original results.
+    \item Provide a validated basis for ablation studies.
+    \item Enable focused exploration of key architecture elements.
+    \item Facilitate contribution to PyHealth.
+    \item Ensure reproducibility through an established codebase.
+\end{itemize}
+
+\section*{References}
+\begin{enumerate}
+    \item[{[1]}] Vaswani, A., et al. (2017). Attention is all you need. \textit{Advances in Neural Information Processing Systems}, 30.
+    \item[{[2]}] Johnson, A. E., et al. (2016). MIMIC-III, a freely accessible critical care database. \textit{Scientific Data}, 3(1), 1-9.
+    \item[{[3]}] Devlin, J., et al. (2018). BERT: Pre-training of deep bidirectional transformers. \textit{arXiv preprint arXiv:1810.04805}.
+    \item[{[4]}] Liu, Y., et al. (2019). RoBERTa: A robustly optimized BERT pretraining approach. \textit{arXiv preprint arXiv:1907.11692}.
+    \item[{[5]}] Lee, J., et al. (2020). BioBERT: a pre-trained biomedical language model. \textit{Bioinformatics}, 36(4), 1234–1240.
+\end{enumerate}
+
+\end{document}
+
