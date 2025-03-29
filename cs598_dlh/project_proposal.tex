@@ -29,6 +29,7 @@ University of Illinois Urbana-Champaign \\
 
 \twocolumn[
   \begin{@twocolumnfalse}
+	\vspace{-0.5in}
     \maketitle
     \thispagestyle{empty}
   \end{@twocolumnfalse}
@@ -37,7 +38,7 @@ University of Illinois Urbana-Champaign \\
 \section{Introduction}
 
 \subsection{Problem Statement}
-Electronic Health Records (EHRs) contain vast amounts of clinical information, with clinical notes being particularly rich resources of patient health status. These notes are free-form text documents created by healthcare professionals over time, containing expert insights and observations critical for clinical decision-making \cite{johnson2016mimic}. However, effectively utilizing clinical notes for predictive tasks presents several significant challenges:
+Clinical notes in Electronic Health Records (EHRs) contain rich patient information and expert insights critical for decision-making \cite{johnson2016mimic}. However, effectively utilizing clinical notes for predictive tasks presents several significant challenges:
 
 First, clinical notes naturally follow a \textit{multi-level sequential structure} - they form a sequence of documents over time, with each document containing sequences of words \cite{sen2019patient}. Second, clinical notes have \textit{complex interrelations} between notes and their constituent parts (chunks) \cite{huang2019clinicalbert}. Third, the \textit{timing and order} of clinical notes can be crucial indicators of patient progression, with irregularly spaced notes potentially containing vital temporal information that most current models ignore.
 
@@ -53,7 +54,7 @@ Zhang, D., Thadajarassiri, J., Sen, C., \& Rundensteiner, E. (2020). Time-Aware 
 The authors proposed a model called FTL-Trans (Flexible Time-aware LSTM Transformer) \cite{zhang2020time}, a hierarchical architecture with four main components:
 
 \begin{enumerate}[leftmargin=*]
-    \item \textbf{Chunk Content Embedding Layer}: Encodes text within each chunk (fixed-length subsequence of a note) using a transformer-encoder layer initialized with pre-trained ClinicalBERT weights \cite{huang2019clinicalbert}.
+\item \textbf{Chunk Content Embedding}: Transformer-encoder using ClinicalBERT weights encodes fixed-length note chunks \cite{huang2019clinicalbert}.
     
     \item \textbf{Position-Enhanced Chunk Embedding Layer}: Merges content embeddings with sequential information using novel global position embeddings (for note position) and local position embeddings (for chunk position within a note), following principles established in transformer architectures \cite{vaswani2017attention}.
     
@@ -86,7 +87,7 @@ Given the complexity of the model and time constraints, I will focus on two key 
 
 \begin{enumerate}[leftmargin=*]
     \item \textbf{Enhanced Time Decay Function}: The original FT-LSTM uses a flexible time decay function with trainable parameters to model temporal importance \cite{zhang2020time}. I will experiment with alternative formulations of this decay function, including:
-    \begin{itemize}
+    \begin{itemize}[leftmargin=*, itemsep=1pt, parsep=1pt, topsep=1pt]
         \item Different initialization strategies based on clinical domain knowledge
         \item Alternative mathematical forms (e.g., exponential, logarithmic, and sigmoid variants)
         \item Task-specific parameterizations for different prediction tasks
@@ -94,7 +95,7 @@ Given the complexity of the model and time constraints, I will focus on two key 
     This extension directly targets the core temporal modeling capability without requiring architectural changes.
     
     \item \textbf{Additional Clinical Tasks}: I will extend the evaluation to other clinically relevant prediction tasks using the same MIMIC-III dataset \cite{johnson2016mimic}, such as:
-    \begin{itemize}
+    \begin{itemize}[leftmargin=*, itemsep=1pt, parsep=1pt, topsep=1pt]
         \item Length-of-stay prediction
         \item Decompensation prediction (predicting acute deterioration)
         \item Medication recommendation
@@ -108,7 +109,7 @@ For future work beyond this project's scope, more ambitious extensions could inc
 
 \subsection{Data Access}
 
-The paper utilizes the MIMIC-III (Medical Information Mart for Intensive Care III) database \cite{johnson2016mimic}, a freely accessible critical care database containing de-identified health data associated with over 40,000 patients who stayed in intensive care units at the Beth Israel Deaconess Medical Center. Access to this dataset requires:
+The paper uses MIMIC-III \cite{johnson2016mimic}, a critical care database with de-identified data from 40,000+ patients. Access requires:
 
 \begin{enumerate}[leftmargin=*]
     \item Completion of a CITI training course on Human Subjects Research
@@ -125,11 +126,9 @@ The source code for the FTL-Trans model is publicly available at \url{https://gi
 The computational requirements for reproducing this work are substantial but manageable within the Google Colab environment:
 
 \begin{enumerate}[leftmargin=*]
-    \item \textbf{Hardware Requirements}: The authors ran experiments on a Tesla V100 GPU with 16GB memory. Google Colab Pro provides access to comparable GPUs (T4 or occasionally V100).
+	\item \textbf{Hardware \& Memory}: Google Colab Pro provides GPUs comparable to the authors' V100. I'll use their approach of 64 chunks per patient to manage memory constraints.
     
-    \item \textbf{Memory Management}: The paper notes they used the last 64 chunks of each patient to fit within GPU memory constraints, which I will follow.
-    
-    \item \textbf{Training Time}: The reported training time is approximately 1.56 hours/epoch for the mortality cohort (the largest), with 3 epochs needed. Google Colab's session time limits (up to 24 hours with Pro+) should be sufficient.
+    \item \textbf{Training Time}: Training requires ~1.56 hours/epoch for 3 epochs, feasible within Colab's time limits.
     
     \item \textbf{Pre-trained Models}: The model utilizes pre-trained ClinicalBERT \cite{huang2019clinicalbert} weights, which are publicly available and will reduce the computational burden of training from scratch.
 \end{enumerate}
