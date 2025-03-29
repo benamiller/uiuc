@@ -19,8 +19,11 @@
 }
 
 \title{\textbf{Reproducing Time-Aware Transformer-based Network\\for Clinical Notes Series Prediction}}
-\author{Student Name}
-\date{\today}
+\author{Benjamin Miller \\
+Siebel School of Computing and Data Science \\
+University of Illinois Urbana-Champaign \\
+\texttt{bm69@illinois.edu}}
+\date{March 30, 2025}
 
 \begin{document}
 
@@ -34,11 +37,11 @@
 \section{Introduction}
 
 \subsection{Problem Statement}
-Electronic Health Records (EHRs) contain vast amounts of clinical information, with clinical notes being particularly rich resources of patient health status. These notes are free-form text documents created by healthcare professionals over time, containing expert insights and observations critical for clinical decision-making. However, effectively utilizing clinical notes for predictive tasks presents several significant challenges:
+Electronic Health Records (EHRs) contain vast amounts of clinical information, with clinical notes being particularly rich resources of patient health status. These notes are free-form text documents created by healthcare professionals over time, containing expert insights and observations critical for clinical decision-making \cite{johnson2016mimic}. However, effectively utilizing clinical notes for predictive tasks presents several significant challenges:
 
-First, clinical notes naturally follow a \textit{multi-level sequential structure} - they form a sequence of documents over time, with each document containing sequences of words. Second, clinical notes have \textit{complex interrelations} between notes and their constituent parts (chunks). Third, the \textit{timing and order} of clinical notes can be crucial indicators of patient progression, with irregularly spaced notes potentially containing vital temporal information that most current models ignore.
+First, clinical notes naturally follow a \textit{multi-level sequential structure} - they form a sequence of documents over time, with each document containing sequences of words \cite{sen2019patient}. Second, clinical notes have \textit{complex interrelations} between notes and their constituent parts (chunks) \cite{huang2019clinicalbert}. Third, the \textit{timing and order} of clinical notes can be crucial indicators of patient progression, with irregularly spaced notes potentially containing vital temporal information that most current models ignore.
 
-The paper proposes to address these challenges by developing a novel hierarchical architecture that can effectively capture both the multi-level sequential structure and temporal information in clinical notes for improved patient-level predictions such as mortality, readmission, and infection risks.
+The paper proposes to address these challenges by developing a novel hierarchical architecture that can effectively capture both the multi-level sequential structure and temporal information in clinical notes for improved patient-level predictions such as mortality, readmission, and infection risks \cite{zhang2020time}.
 
 \subsection{Citation to Original Paper}
 Zhang, D., Thadajarassiri, J., Sen, C., \& Rundensteiner, E. (2020). Time-Aware Transformer-based Network for Clinical Notes Series Prediction\cite{zhang2020time}. In \textit{Proceedings of Machine Learning Research}, 126:1-22. Machine Learning for Healthcare.
@@ -47,64 +50,70 @@ Zhang, D., Thadajarassiri, J., Sen, C., \& Rundensteiner, E. (2020). Time-Aware 
 
 \subsection{Specific Approach}
 
-The authors proposed a model called FTL-Trans (Flexible Time-aware LSTM Transformer), a hierarchical architecture with four main components:
+The authors proposed a model called FTL-Trans (Flexible Time-aware LSTM Transformer) \cite{zhang2020time}, a hierarchical architecture with four main components:
 
 \begin{enumerate}[leftmargin=*]
-    \item \textbf{Chunk Content Embedding Layer}: Encodes text within each chunk (fixed-length subsequence of a note) using a transformer-encoder layer initialized with pre-trained ClinicalBERT weights.
+    \item \textbf{Chunk Content Embedding Layer}: Encodes text within each chunk (fixed-length subsequence of a note) using a transformer-encoder layer initialized with pre-trained ClinicalBERT weights \cite{huang2019clinicalbert}.
     
-    \item \textbf{Position-Enhanced Chunk Embedding Layer}: Merges content embeddings with sequential information using novel global position embeddings (for note position) and local position embeddings (for chunk position within a note).
+    \item \textbf{Position-Enhanced Chunk Embedding Layer}: Merges content embeddings with sequential information using novel global position embeddings (for note position) and local position embeddings (for chunk position within a note), following principles established in transformer architectures \cite{vaswani2017attention}.
     
-    \item \textbf{Time-Aware Layer}: Implements a novel Flexible Time-aware LSTM (FT-LSTM) cell that incorporates temporal information by learning a flexible time decay function to capture patterns of temporal importance.
+    \item \textbf{Time-Aware Layer}: Implements a novel Flexible Time-aware LSTM (FT-LSTM) cell that incorporates temporal information by learning a flexible time decay function to capture patterns of temporal importance, extending prior work on time-aware LSTMs \cite{baytas2017patient}.
     
     \item \textbf{Classification Layer}: Generates patient-level predictions using the learned representations.
 \end{enumerate}
 
-\textbf{Evaluation Metrics}: The authors evaluated their model using standard classification metrics: Area Under the Receiver Operating Characteristic curve (AUROC), Accuracy, and Area Under Precision-Recall curve (AUPR). They compared against baselines including BERT, ClinicalBERT, and variations of the proposed architecture.
+\textbf{Evaluation Metrics}: The authors evaluated their model using standard classification metrics: Area Under the Receiver Operating Characteristic curve (AUROC), Accuracy, and Area Under Precision-Recall curve (AUPR). They compared against baselines including BERT \cite{devlin2018bert}, ClinicalBERT \cite{huang2019clinicalbert}, and variations of the proposed architecture.
 
-\textbf{Clinical Tasks}: The model was evaluated on five prediction tasks using MIMIC-III data\cite{johnson2016mimic}: in-hospital mortality, 30-day readmission, and three infection predictions (Escherichia Coli, Enterococcus Sp., and Klebsiella pneumoniae).
+\textbf{Clinical Tasks}: The model was evaluated on five prediction tasks using MIMIC-III data \cite{johnson2016mimic}: in-hospital mortality, 30-day readmission, and three infection predictions (Escherichia Coli, Enterococcus Sp., and Klebsiella pneumoniae).
 
 \subsection{Novelty and Relevance}
 
 The key innovations of this work are:
 
 \begin{enumerate}[leftmargin=*]
-    \item \textbf{Multi-level Sequential Structure}: Unlike flat models like ClinicalBERT that lose the hierarchical structure of clinical notes, FTL-Trans preserves the relationships between notes and chunks through a hierarchical design and multi-level position embeddings.
+    \item \textbf{Multi-level Sequential Structure}: Unlike flat models like ClinicalBERT \cite{huang2019clinicalbert} that lose the hierarchical structure of clinical notes, FTL-Trans preserves the relationships between notes and chunks through a hierarchical design and multi-level position embeddings \cite{zhang2020time}.
     
-    \item \textbf{Flexible Time-Awareness}: The proposed FT-LSTM contains a trainable time decay function that combines convex, linear, and concave sub-functions, allowing it to learn task-specific patterns of temporal importance rather than using fixed decay functions.
+    \item \textbf{Flexible Time-Awareness}: The proposed FT-LSTM contains a trainable time decay function that combines convex, linear, and concave sub-functions, allowing it to learn task-specific patterns of temporal importance rather than using fixed decay functions \cite{baytas2017patient}.
     
-    \item \textbf{Jointly Modeling Content and Context}: The model simultaneously leverages linguistic content and contextual information (position and timing), capturing the full complexity of clinical note series.
+    \item \textbf{Jointly Modeling Content and Context}: The model simultaneously leverages linguistic content and contextual information (position and timing), capturing the full complexity of clinical note series \cite{zhang2020time}.
 \end{enumerate}
 
-These innovations address significant limitations in existing models. Transformer-based models like ClinicalBERT typically disregard interrelations among notes and chunks, while standard time-aware models make restrictive assumptions about temporal influence decay. The authors hypothesized that a model capturing both multi-level structure and flexible temporal importance would outperform existing approaches, which their empirical results supported (improvements of up to 5\% in AUROC and 6\% in accuracy).
+These innovations address significant limitations in existing models. Transformer-based models like ClinicalBERT \cite{huang2019clinicalbert} typically disregard interrelations among notes and chunks, while standard time-aware models \cite{baytas2017patient} make restrictive assumptions about temporal influence decay. The authors hypothesized that a model capturing both multi-level structure and flexible temporal importance would outperform existing approaches, which their empirical results supported (improvements of up to 5\% in AUROC and 6\% in accuracy).
 
 \subsection{Planned Ablations and Extensions}
 
-To thoroughly evaluate the reproduced model and explore potential improvements, I plan to conduct the following ablation studies and extensions:
+Given the complexity of the model and time constraints, I will focus on two key extensions that offer the best balance of feasibility and research value:
 
 \begin{enumerate}[leftmargin=*]
-    \item \textbf{Enhanced Time Decay Function}: Experiment with alternative time decay formulations and initialization strategies, potentially leveraging domain-specific knowledge about temporal patterns in clinical settings.
+    \item \textbf{Enhanced Time Decay Function}: The original FT-LSTM uses a flexible time decay function with trainable parameters to model temporal importance \cite{zhang2020time}. I will experiment with alternative formulations of this decay function, including:
+    \begin{itemize}
+        \item Different initialization strategies based on clinical domain knowledge
+        \item Alternative mathematical forms (e.g., exponential, logarithmic, and sigmoid variants)
+        \item Task-specific parameterizations for different prediction tasks
+    \end{itemize}
+    This extension directly targets the core temporal modeling capability without requiring architectural changes.
     
-    \item \textbf{Attention-based Time Awareness}: Replace the FT-LSTM with a transformer-based temporal attention mechanism to see if self-attention can better capture temporal dependencies.
-    
-    \item \textbf{Pre-training Strategies}: Investigate the impact of different pre-training approaches for the transformer components to better capture clinical language patterns.
-    
-    \item \textbf{Note Type Importance}: Extend the model to account for different types of clinical notes (e.g., nursing notes vs. physician notes) which may have varying importance.
-    
-    \item \textbf{Additional Clinical Tasks}: Evaluate the model on other clinically relevant prediction tasks beyond those in the original paper, such as length-of-stay prediction or medication recommendation.
+    \item \textbf{Additional Clinical Tasks}: I will extend the evaluation to other clinically relevant prediction tasks using the same MIMIC-III dataset \cite{johnson2016mimic}, such as:
+    \begin{itemize}
+        \item Length-of-stay prediction
+        \item Decompensation prediction (predicting acute deterioration)
+        \item Medication recommendation
+    \end{itemize}
+    This will help assess the model's generalizability across different clinical prediction scenarios while leveraging the same data preprocessing pipeline.
 \end{enumerate}
 
-The validity of the original hypothesis (that capturing both multi-level structure and temporal information improves clinical prediction) appears legitimate based on the reported results, but requires careful validation, especially regarding the relative contributions of each component.
+For future work beyond this project's scope, more ambitious extensions could include attention-based temporal modeling \cite{vaswani2017attention}, specialized pre-training strategies, and note type importance modeling. The current focus will allow for thorough validation of the original hypothesis (that capturing both multi-level structure and temporal information improves clinical prediction), particularly regarding the flexible time decay function's contribution to performance.
 
 \section{Data Access and Implementation Details}
 
 \subsection{Data Access}
 
-The paper utilizes the MIMIC-III (Medical Information Mart for Intensive Care III) database, a freely accessible critical care database containing de-identified health data associated with over 40,000 patients who stayed in intensive care units at the Beth Israel Deaconess Medical Center. Access to this dataset requires:
+The paper utilizes the MIMIC-III (Medical Information Mart for Intensive Care III) database \cite{johnson2016mimic}, a freely accessible critical care database containing de-identified health data associated with over 40,000 patients who stayed in intensive care units at the Beth Israel Deaconess Medical Center. Access to this dataset requires:
 
 \begin{enumerate}[leftmargin=*]
     \item Completion of a CITI training course on Human Subjects Research
     \item Signing of a data use agreement
-    \item Registration on the PhysioNet website
+    \item Registration on the PhysioNet website and credentialing through the class event
 \end{enumerate}
 
 I have already completed these requirements and have been granted access to the MIMIC-III dataset. The authors extract clinical notes from the NoteEvents table and create five cohorts for different prediction tasks (mortality, readmission, and three infection types). I will follow their detailed cohort construction process as described in Section 3 of the paper.
@@ -122,14 +131,14 @@ The computational requirements for reproducing this work are substantial but man
     
     \item \textbf{Training Time}: The reported training time is approximately 1.56 hours/epoch for the mortality cohort (the largest), with 3 epochs needed. Google Colab's session time limits (up to 24 hours with Pro+) should be sufficient.
     
-    \item \textbf{Pre-trained Models}: The model utilizes pre-trained ClinicalBERT weights, which are publicly available and will reduce the computational burden of training from scratch.
+    \item \textbf{Pre-trained Models}: The model utilizes pre-trained ClinicalBERT \cite{huang2019clinicalbert} weights, which are publicly available and will reduce the computational burden of training from scratch.
 \end{enumerate}
 
 For ablation studies, I may need to optimize hyperparameters or model components to fit within computational constraints, potentially using model parallel training across multiple Colab sessions if necessary.
 
 \subsection{Implementation Approach}
 
-I plan to use the authors' existing codebase (\url{https://github.com/zdy93/FTL-Trans}) as the foundation for reproduction. This approach offers several advantages:
+I plan to use the authors' existing codebase (\url{https://github.com/zdy93/FTL-Trans}) as the foundation for reproduction \cite{zhang2020time}. This approach offers several advantages:
 
 \begin{enumerate}[leftmargin=*]
     \item Ensures fidelity to the original implementation details
