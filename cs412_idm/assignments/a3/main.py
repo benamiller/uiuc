@@ -94,17 +94,29 @@ def kmeans(data, k, max_iterations, convergence_threshold):
     return assignments, centroids
 
 
+def write_output(filename, assignments):
+    try:
+        with open(filename, 'w') as f:
+            for i, cluster_id in enumerate(assignments):
+                f.write(f"{i} {cluster_id}\n")
+        print(f"\nCluster assignment written to {filename}")
+    except IOError as e:
+        print(f"Error writing to output file, {filename}: {e}")
+    except Exception as e:
+        print(f"Unexpectedly broken writing to {filename}: {e}")
+
+
 if __name__ == "__main__":
-    data = read_data("places.txt")
+
+    data = read_data(INPUT_FILE)
     print(f"DATA:\n{data}\n")
-    print(f"CLUSTERS:\n{initialize_cluster_centroids(data, 3)}")
-    print(f"""ASSIGNMENTS:\n
-          {kmeans(
-              data,
-              K,
-              MAX_ITERATIONS,
-              CONVERGENCE_THRESHOLD
-              )
-           [0]
-           }
-          """)
+
+    clusters = initialize_cluster_centroids(data, 3)
+    print(f"CLUSTERS:\n{clusters}")
+
+    assignments, centroids = kmeans(
+            data, K, MAX_ITERATIONS, CONVERGENCE_THRESHOLD)
+    print(f"ASSIGNMENTS:\n{assignments}")
+    print(f"CENTROIDS:\n{centroids}")
+
+    write_output(OUTPUT_FILE, assignments)
