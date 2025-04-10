@@ -2,6 +2,13 @@ import numpy as np
 import random
 
 
+INPUT_FILE = "places.txt"
+OUTPUT_FILE = "clusters.txt"
+K = 3
+MAX_ITERATIONS = 100
+CONVERGENCE_THRESHOLD = 1e-4
+
+
 def read_data(filename):
     points = []
     try:
