@@ -45,7 +45,66 @@ def initialize_cluster_centroids(data, k):
     return centroids
 
 
+def kmeans(data, k, max_iterations, convergence_threshold):
+    n, d = data.shape
+
+    centroids = initialize_cluster_centroids(data, k)
+
+    assignments = np.zeros(n, dtype=int)
+
+    for iteration in range(max_iterations):
+        print(f"~~~~~~~~ ITERATION {iteration + 1}/{max_iterations} ~~~~~~~~")
+        old_centroids = np.copy(centroids)
+
+        for i in range(n):
+            point = data[i]
+            distances = (
+                [euclidean_distance(point, centroid) for centroid in centroids]
+            )
+
+            assignments[i] = np.argmin(distances)
+
+        new_centroids = np.zeros((k, d))
+        cluster_counts = np.zeros(k, dtype=int)
+
+        for i in range(n):
+            assigned_cluster_index = assignments[i]
+            new_centroids[assigned_cluster_index] += data[i]
+            cluster_counts[assigned_cluster_index] += 1
+
+        for j in range(k):
+            if cluster_counts[j] > 0:
+                centroids[j] = new_centroids[j] / cluster_counts[j]
+            else:
+                # No points assigned to this cluster
+                # For now, just re-initialize centroid
+                print("Cluster with no data points. Re-initializing...")
+                centroids[j] = data[random.choice(range(n))]
+
+        centroid_position_delta = np.linalg.norm(centroids - old_centroids)
+        print(f"Controid position change: {centroid_position_delta}")
+
+        if (centroid_position_delta < convergence_threshold):
+            print(f"Considered as converged after iteration {iteration + 1}")
+            break
+
+    else:
+        print(f"Did not converge within {max_iterations + 1} iterations")
+
+    return assignments, centroids
+
+
 if __name__ == "__main__":
     data = read_data("places.txt")
     print(f"DATA:\n{data}\n")
     print(f"CLUSTERS:\n{initialize_cluster_centroids(data, 3)}")
+    print(f"""ASSIGNMENTS:\n
+          {kmeans(
+              data,
+              K,
+              MAX_ITERATIONS,
+              CONVERGENCE_THRESHOLD
+              )
+           [0]
+           }
+          """)
