@@ -1,5 +1,6 @@
 import numpy as np
 
+
 def read_data(filename):
     points = []
     try:
@@ -18,6 +19,7 @@ def read_data(filename):
         raise
 
     return np.array(points)
+
 
 if __name__ == "__main__":
     print(read_data("places.txt"))
