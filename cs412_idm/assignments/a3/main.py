@@ -21,5 +21,9 @@ def read_data(filename):
     return np.array(points)
 
 
+def euclidean_distance(point1, point2):
+    return np.linalg.norm(point1 - point2)
+
+
 if __name__ == "__main__":
     print(read_data("places.txt"))
