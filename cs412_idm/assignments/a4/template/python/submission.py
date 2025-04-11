@@ -34,6 +34,52 @@ class Solution:
         else:
             raise ValueError("Invalid link type")
 
+    def _hclus(self,
+               X: List[List[float]], K: int, link_type: str) -> List[int]:
+        n = len(X)
+        if n == 0:
+            return []
+        if K > n or K <= 0:
+            raise ValueError("K should be from 1 to the number of data points")
+
+        clusters = [[i] for i in range(n)]
+
+        while (len(clusters) > K):
+            min_dist = float('inf')
+            merge_indices = (-1, -1)
+
+            for i in range(len(clusters)):
+                for j in range(i + 1, len(clusters)):
+                    dist = self._calculate_cluster_distance(
+                            clusters[i], clusters[j], X, link_type)
+                    if dist < min_dist:
+                        min_dist = dist
+                        merge_indices = (i, j)
+
+            if merge_indices == (-1, -1):
+                break
+
+            # We should definitely remove the bigger of the two first to not
+            # shift the clusters array and then pop the wrong cluster
+            # idx1 will be bigger, and should be popped first
+            idx2, idx1 = sorted(merge_indices)
+            # print(f"idx1 is {idx1}, and idx2 is {idx2}")
+            merged_cluster = clusters[idx1] + clusters[idx2]
+            clusters.pop(idx1)
+            clusters.pop(idx2)
+            clusters.append(merged_cluster)
+
+        # The cluster containing point 0 might not have label 0, but per the
+        # docstring in hclus_single_link, this is okay
+        labels = [-1] * n
+        current_label = 0
+        for cluster_indices in clusters:
+            for index in cluster_indices:
+                labels[index] = current_label
+            current_label += 1
+
+        return labels
+
     def hclus_single_link(self, X: List[List[float]], K: int) -> List[int]:
         """Single link hierarchical clustering
         Args:
@@ -102,4 +148,6 @@ if __name__ == "__main__":
     # Average of these is ~136
     print(average_link_distance)
 
-
+    # This should be the same as output00.txt
+    labels = sol._hclus(data, 2, 'single')
+    print(labels)
