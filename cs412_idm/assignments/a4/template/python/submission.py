@@ -102,52 +102,52 @@ class Solution:
         pass
 
 
-if __name__ == "__main__":
-    sol = Solution()
-    data = [
-            [7.8122, 7.0391],
-            [-90.3764, 14.7628],
-            [152.8991, -30.4529],
-            [8.2569, 49.8364],
-            [145.4259, -37.8743],
-            ]
-    distance = sol._euclidean_distance(data[0], data[1])
-    # Should be ~100
-    print(distance)
-
-    cluster_1_indices = [0, 1]
-    cluster_2_indices = [2, 3]
-    single_link_distance = sol._calculate_cluster_distance(
-            cluster_1_indices,
-            cluster_2_indices,
-            data,
-            'single')
-
-    # Should be 0 -> 3 at ~42.8
-    print(single_link_distance)
-
-    complete_link_distance = sol._calculate_cluster_distance(
-            cluster_1_indices,
-            cluster_2_indices,
-            data,
-            'complete')
-
-    # Should be 1 -> 2 at ~247
-    print(complete_link_distance)
-
-    average_link_distance = sol._calculate_cluster_distance(
-            cluster_1_indices,
-            cluster_2_indices,
-            data,
-            'average')
-
-    # 0 -> 2 = ~149.85
-    # 0 -> 3 = ~42.8
-    # 1 -> 2 = ~247.4
-    # 1 -> 3 = ~104.68
-    # Average of these is ~136
-    print(average_link_distance)
-
-    # This should be the same as output00.txt
-    labels = sol._hclus(data, 2, 'single')
-    print(labels)
+# if __name__ == "__main__":
+#     sol = Solution()
+#     data = [
+#             [7.8122, 7.0391],
+#             [-90.3764, 14.7628],
+#             [152.8991, -30.4529],
+#             [8.2569, 49.8364],
+#             [145.4259, -37.8743],
+#             ]
+#     distance = sol._euclidean_distance(data[0], data[1])
+#     # Should be ~100
+#     print(distance)
+#
+#     cluster_1_indices = [0, 1]
+#     cluster_2_indices = [2, 3]
+#     single_link_distance = sol._calculate_cluster_distance(
+#             cluster_1_indices,
+#             cluster_2_indices,
+#             data,
+#             'single')
+#
+#     # Should be 0 -> 3 at ~42.8
+#     print(single_link_distance)
+#
+#     complete_link_distance = sol._calculate_cluster_distance(
+#             cluster_1_indices,
+#             cluster_2_indices,
+#             data,
+#             'complete')
+#
+#     # Should be 1 -> 2 at ~247
+#     print(complete_link_distance)
+#
+#     average_link_distance = sol._calculate_cluster_distance(
+#             cluster_1_indices,
+#             cluster_2_indices,
+#             data,
+#             'average')
+#
+#     # 0 -> 2 = ~149.85
+#     # 0 -> 3 = ~42.8
+#     # 1 -> 2 = ~247.4
+#     # 1 -> 3 = ~104.68
+#     # Average of these is ~136
+#     print(average_link_distance)
+#
+#     # This should be the same as output00.txt
+#     labels = sol._hclus(data, 2, 'single')
+#     print(labels)
