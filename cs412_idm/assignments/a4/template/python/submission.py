@@ -6,8 +6,33 @@ import math
 
 
 class Solution:
-    def _euclidean_distance(self, p1: List[float], p2: List[float]):
+    def _euclidean_distance(self, p1: List[float], p2: List[float]) -> float:
         return math.sqrt(sum([(a - b) ** 2 for a, b in zip(p1, p2)]))
+
+    def _calculate_cluster_distance(
+            self,
+            cluster_1_indices: List[int],
+            cluster_2_indices: List[int],
+            X: List[List[float]],
+            link_type: str
+            ):
+        distances = []
+        for i in cluster_1_indices:
+            for j in cluster_2_indices:
+                dist = self._euclidean_distance(X[i], X[j])
+                distances.append(dist)
+
+        if link_type == 'single':
+            return min(distances)
+
+        elif link_type == 'complete':
+            return max(distances)
+
+        elif link_type == 'average':
+            return sum(distances) / len(distances)
+
+        else:
+            raise ValueError("Invalid link type")
 
     def hclus_single_link(self, X: List[List[float]], K: int) -> List[int]:
         """Single link hierarchical clustering
@@ -41,4 +66,19 @@ if __name__ == "__main__":
             [145.4259, -37.8743],
             ]
     distance = sol._euclidean_distance(data[0], data[1])
+    # Should be ~100
     print(distance)
+
+    cluster_1_indices = [0, 1]
+    cluster_2_indices = [2, 3]
+    single_link_distance = sol._calculate_cluster_distance(
+            cluster_1_indices,
+            cluster_2_indices,
+            data,
+            'single')
+
+    # Should be 0 -> 3 at ~42.8
+    print(single_link_distance)
+
+
+
