@@ -80,5 +80,26 @@ if __name__ == "__main__":
     # Should be 0 -> 3 at ~42.8
     print(single_link_distance)
 
+    complete_link_distance = sol._calculate_cluster_distance(
+            cluster_1_indices,
+            cluster_2_indices,
+            data,
+            'complete')
+
+    # Should be 1 -> 2 at ~247
+    print(complete_link_distance)
+
+    average_link_distance = sol._calculate_cluster_distance(
+            cluster_1_indices,
+            cluster_2_indices,
+            data,
+            'average')
+
+    # 0 -> 2 = ~149.85
+    # 0 -> 3 = ~42.8
+    # 1 -> 2 = ~247.4
+    # 1 -> 3 = ~104.68
+    # Average of these is ~136
+    print(average_link_distance)
 
 
