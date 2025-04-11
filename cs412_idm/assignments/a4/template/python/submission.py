@@ -90,16 +90,17 @@ class Solution:
           The number does not matter as long as the clusters are correct.
           For example: [0, 0, 1] is treated the same as [1, 1, 0]"""
         # implement this function
+        return self._hclus(X, K, 'single')
 
     def hclus_average_link(self, X: List[List[float]], K: int) -> List[int]:
         """Average link hierarchical clustering"""
         # implement this function
-        pass
+        return self._hclus(X, K, 'average')
 
     def hclus_complete_link(self, X: List[List[float]], K: int) -> List[int]:
         """Complete link hierarchical clustering"""
         # implement this function
-        pass
+        return self._hclus(X, K, 'complete')
 
 
 # if __name__ == "__main__":
