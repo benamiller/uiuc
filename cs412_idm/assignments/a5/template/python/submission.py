@@ -33,6 +33,33 @@ class Solution:
             The Jaccard index. Do NOT round this value.
         """
         # TP / (TP + FP + FN)
+        n = len(true_labels)
+        if n == 0:
+            return 1.0
+
+        tp = 0
+        fp = 0
+        fn = 0
+
+        for i in range(n):
+            for j in range(i + 1, n):
+                same_cluster_label = (true_labels[i] == true_labels[j])
+                same_cluster_pred = (pred_labels[i] == pred_labels[j])
+
+                if same_cluster_label and same_cluster_pred:
+                    tp += 1
+                elif same_cluster_label and not same_cluster_pred:
+                    fn += 1
+                elif not same_cluster_label and same_cluster_pred:
+                    fp += 1
+
+        denominator = tp + fp + fn
+
+        # Avoid division by zero, just 1.0 if we had no true positive as all
+        if denominator == 0:
+            return 1.0
+
+        return float(tp) / denominator
 
     def nmi(self, true_labels: List[int], pred_labels: List[int]) -> float:
         """Calculate the normalized mutual information.
@@ -49,5 +76,15 @@ if __name__ == "__main__":
     sol = Solution()
     true_labels = [0, 1, 0, 0, 1, 1, 1, 0, 1, 1]
     pred_labels = [1, 0, 1, 1, 0, 1, 1, 1, 0, 1]
+
     conf_matrix = sol.confusion_matrix(true_labels, pred_labels)
     print(conf_matrix)
+
+    # New labels and preds to match input01.txt with Jaccard output
+    true_labels = [0, 0, 1, 0, 1, 0, 0, 1, 0, 1]
+    pred_labels = [1, 1, 0, 1, 1, 0, 1, 0, 0, 0]
+    jaccard = sol.jaccard(true_labels, pred_labels)
+    # Should be ~0.3226
+    print(jaccard)
+
+
