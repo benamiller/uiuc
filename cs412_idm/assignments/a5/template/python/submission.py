@@ -2,6 +2,7 @@
 from typing import Dict, List, Tuple
 # you may use other Python standard libraries, but not data
 # science libraries, such as numpy, scikit-learn, etc.
+from collections import defaultdict
 
 
 class Solution:
@@ -17,7 +18,12 @@ class Solution:
         Returns:
             A dictionary of (true_label, pred_label): count
         """
-        pass
+        conf_matrix = defaultdict(int)
+        for true_label, predicted_label in zip(true_labels, pred_labels):
+            conf_matrix[(true_label, predicted_label)] += 1
+
+        print(conf_matrix)
+        return dict(conf_matrix)
 
     def jaccard(self, true_labels: List[int], pred_labels: List[int]) -> float:
         """Calculate the Jaccard index.
@@ -41,4 +47,8 @@ class Solution:
 
 
 if __name__ == "__main__":
-    pass
+    sol = Solution()
+    true_labels = [0, 1, 0, 0, 1, 1, 1, 0, 1, 1]
+    pred_labels = [1, 0, 1, 1, 0, 1, 1, 1, 0, 1]
+    conf_matrix = sol.confusion_matrix(true_labels, pred_labels)
+    print(conf_matrix)
