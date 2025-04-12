@@ -2,7 +2,8 @@
 from typing import Dict, List, Tuple
 # you may use other Python standard libraries, but not data
 # science libraries, such as numpy, scikit-learn, etc.
-from collections import defaultdict
+from collections import Counter, defaultdict
+import math
 
 
 class Solution:
@@ -69,7 +70,42 @@ class Solution:
         Returns:
             The normalized mutual information. Do NOT round this value.
         """
-        pass
+        n = len(true_labels)
+        if n == 0:
+            return 1.0
+
+        true_counts = Counter(true_labels)
+        pred_counts = Counter(pred_labels)
+
+        entropy_true = 0.0
+        for label in true_counts:
+            prob_true = true_counts[label] / n
+            entropy_true -= prob_true * math.log2(prob_true)
+
+        entropy_pred = 0.0
+        for pred in pred_counts:
+            prob_pred = pred_counts[pred] / n
+            entropy_pred -= prob_pred * math.log2(prob_pred)
+
+        mutual_information = 0.0
+        conf_matrix = self.confusion_matrix(true_labels, pred_labels)
+
+        for (true_label, pred_label), count in conf_matrix.items():
+            joint_probability = count / n
+            prob_true = true_counts[true_label] / n
+            prob_pred = pred_counts[pred_label] / n
+
+            if joint_probability > 0:
+                mutual_information += (
+                        joint_probability *
+                        math.log2(joint_probability / (prob_true * prob_pred)))
+
+        denominator = math.sqrt(entropy_true * entropy_pred)
+
+        if denominator == 0:
+            return 1.0 if mutual_information == 0 else 0.0
+
+        return mutual_information / denominator
 
 
 if __name__ == "__main__":
@@ -87,4 +123,9 @@ if __name__ == "__main__":
     # Should be ~0.3226
     print(jaccard)
 
+    true_labels = [0, 0, 0, 1, 1, 0, 1, 0, 1, 0]
+    pred_labels = [1, 1, 1, 1, 0, 0, 1, 0, 0, 1]
+    normalized_mutual_information = sol.nmi(true_labels, pred_labels)
+    # Should be ~0.0206
+    print(normalized_mutual_information)
 
