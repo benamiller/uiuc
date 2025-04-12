@@ -105,7 +105,7 @@ class Solution:
         if denominator == 0:
             return 1.0 if mutual_information == 0 else 0.0
 
-        return mutual_information / denominator
+        return max(0.0, min(1.0, (mutual_information / denominator)))
 
 
 if __name__ == "__main__":
