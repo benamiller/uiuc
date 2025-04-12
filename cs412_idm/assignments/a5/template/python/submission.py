@@ -108,24 +108,24 @@ class Solution:
         return max(0.0, min(1.0, (mutual_information / denominator)))
 
 
-if __name__ == "__main__":
-    sol = Solution()
-    true_labels = [0, 1, 0, 0, 1, 1, 1, 0, 1, 1]
-    pred_labels = [1, 0, 1, 1, 0, 1, 1, 1, 0, 1]
-
-    conf_matrix = sol.confusion_matrix(true_labels, pred_labels)
-    print(conf_matrix)
-
-    # New labels and preds to match input01.txt with Jaccard output
-    true_labels = [0, 0, 1, 0, 1, 0, 0, 1, 0, 1]
-    pred_labels = [1, 1, 0, 1, 1, 0, 1, 0, 0, 0]
-    jaccard = sol.jaccard(true_labels, pred_labels)
-    # Should be ~0.3226
-    print(jaccard)
-
-    true_labels = [0, 0, 0, 1, 1, 0, 1, 0, 1, 0]
-    pred_labels = [1, 1, 1, 1, 0, 0, 1, 0, 0, 1]
-    normalized_mutual_information = sol.nmi(true_labels, pred_labels)
-    # Should be ~0.0206
-    print(normalized_mutual_information)
-
+# if __name__ == "__main__":
+#     sol = Solution()
+#     true_labels = [0, 1, 0, 0, 1, 1, 1, 0, 1, 1]
+#     pred_labels = [1, 0, 1, 1, 0, 1, 1, 1, 0, 1]
+#
+#     conf_matrix = sol.confusion_matrix(true_labels, pred_labels)
+#     print(conf_matrix)
+#
+#     # New labels and preds to match input01.txt with Jaccard output
+#     true_labels = [0, 0, 1, 0, 1, 0, 0, 1, 0, 1]
+#     pred_labels = [1, 1, 0, 1, 1, 0, 1, 0, 0, 0]
+#     jaccard = sol.jaccard(true_labels, pred_labels)
+#     # Should be ~0.3226
+#     print(jaccard)
+#
+#     true_labels = [0, 0, 0, 1, 1, 0, 1, 0, 1, 0]
+#     pred_labels = [1, 1, 1, 1, 0, 0, 1, 0, 0, 1]
+#     normalized_mutual_information = sol.nmi(true_labels, pred_labels)
+#     # Should be ~0.0206
+#     print(normalized_mutual_information)
+#
