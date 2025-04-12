@@ -58,7 +58,7 @@ class Solution:
 
         # Avoid division by zero, just 1.0 if we had no true positive as all
         if denominator == 0:
-            return 1.0
+            return 0.0
 
         return float(tp) / denominator
 
@@ -103,7 +103,7 @@ class Solution:
         denominator = math.sqrt(entropy_true * entropy_pred)
 
         if denominator == 0:
-            return 1.0 if mutual_information == 0 else 0.0
+            return 0
 
         return max(0.0, min(1.0, (mutual_information / denominator)))
 
