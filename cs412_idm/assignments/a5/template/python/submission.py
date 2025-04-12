@@ -22,7 +22,6 @@ class Solution:
         for true_label, predicted_label in zip(true_labels, pred_labels):
             conf_matrix[(true_label, predicted_label)] += 1
 
-        print(conf_matrix)
         return dict(conf_matrix)
 
     def jaccard(self, true_labels: List[int], pred_labels: List[int]) -> float:
@@ -33,7 +32,7 @@ class Solution:
         Returns:
             The Jaccard index. Do NOT round this value.
         """
-        pass
+        # TP / (TP + FP + FN)
 
     def nmi(self, true_labels: List[int], pred_labels: List[int]) -> float:
         """Calculate the normalized mutual information.
