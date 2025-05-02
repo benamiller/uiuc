@@ -279,6 +279,28 @@ class Solution:
 
         self._build_tree(self.root, train_data, train_label, depth=0)
 
+    def _predict_one(self, node: Node, data_point: List[float]) -> int:
+        current_node = node
+        while current_node.split_dim != -1:
+            split_dim = current_node.split_dim
+            split_point = current_node.split_point
+
+            if split_dim < len(data_point):
+                if data_point[split_dim] <= split_point:
+                    if current_node.left:
+                        current_node = current_node.left
+                    else:
+                        break
+                else:
+                    if current_node.right:
+                        current_node = current_node.right
+                    else:
+                        break
+            else:
+                break
+
+        return current_node.label
+
     def classify(self, train_data: List[List[float]], train_label: List[int], test_data: List[List[float]]) -> List[int]:
         """
         Classify the test data using a decision tree model built from the provided training data and labels.
