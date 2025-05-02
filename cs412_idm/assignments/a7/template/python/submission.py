@@ -5,6 +5,7 @@ from typing import Dict, List, Tuple
 # You may NOT use any non-standard Python libraries such as numpy, scikit-learn, etc.
 
 num_C = 7 # Represents the total number of classes
+alpha = 0.1
 
 class Solution:
   
