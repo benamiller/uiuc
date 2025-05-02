@@ -1,4 +1,5 @@
-from typing import List
+from typing import List, Dict, Tuple, Set
+import math
 
 
 class Node:
@@ -71,7 +72,7 @@ class Solution:
                 entropy -= probability * math.log2(probability)
         return entropy
 
-    def split_info(self, data: List[List[float]], label: List[int], split_dim: int, split_point: float) -> float:
+    def split_info(self, data: List[List[float]], labels: List[int], split_dim: int, split_point: float) -> float:
         """
         Compute the information needed to classify a dataset if it's split
         with the given splitting dimension and splitting point, i.e. Info_A in the slides.
@@ -141,9 +142,9 @@ class Solution:
         if not labels:
             return -1
 
-        label_counts = Dict[int, int] = {}
+        label_counts: Dict[int, int] = {}
         for label in labels:
-            label_counts = label_counts.get(label, 0) + 1
+            label_counts[label] = label_counts.get(label, 0) + 1
 
         if not label_counts:
             return -1
@@ -152,7 +153,7 @@ class Solution:
         majority_label = -1
 
         for label in sorted(label_counts.keys()):
-            if label_counts[labels] > max_count:
+            if label_counts[label] > max_count:
                 max_count = label_counts[label]
                 majority_label = label
 
@@ -218,10 +219,10 @@ class Solution:
         node.split_dim = split_dim
         node.split_point = split_point
 
-        left_data = List[List[float]] = []
+        left_data: List[List[float]] = []
         left_labels: List[int] = []
-        right_data = List[List[float]] = []
-        right_labels = List[int] = []
+        right_data: List[List[float]] = []
+        right_labels: List[int] = []
 
         for i, point in enumerate(data):
             if split_dim < len(point):
@@ -234,7 +235,7 @@ class Solution:
 
         if left_data:
             node.left = Node()
-            self._built_tree(node.left, left_data, left_labels, depth + 1)
+            self._build_tree(node.left, left_data, left_labels, depth + 1)
         else:
             node.left = Node()
             node.left.label = node.label
@@ -243,7 +244,7 @@ class Solution:
 
         if right_data:
             node.right = Node()
-            self._built_tree(node.right, right_data, right_labels, depth + 1)
+            self._build_tree(node.right, right_data, right_labels, depth + 1)
         else:
             node.right = Node()
             node.right.label = node.label
@@ -316,11 +317,75 @@ class Solution:
         List[int]: A list of integer predictions, which are the label predictions for the test data after fitting
                    the train data and labels to a decision tree.
         """
+        self.fit(train_data, train_label)
 
-  """
-  Students are encouraged to implement as many additional methods as they find helpful in completing
-  the assignment. These methods can be implemented either as class methods of the Solution class or as
-  global methods, depending on design preferences.
+        if not self.root:
+            return [-1] * len(test_data)
 
-  For instance, one essential method that must be implemented is a method to build out the decision tree recursively.
-  """
+        predictions: List[int] = []
+        for point in test_data:
+            pred = self._predict_one(self.root, point)
+            predictions.append(pred)
+
+        return predictions
+
+
+if __name__ == "__main__":
+    print("Running basic runtime test...")
+
+    train_data = [
+        [1.0, 5.0], [1.5, 5.5], [0.5, 4.5], [2.0, 5.0], # Class 0 (low f0)
+        [1.2, 1.0],                                      # Class 0 (low f0, low f1)
+        [7.0, 1.0], [8.0, 0.5], [9.5, 1.5], [6.5, 0.8], # Class 1 (high f0)
+        [7.5, 8.0], [8.5, 9.0]                            # Class 1 (high f0, high f1)
+    ]
+    train_label = [
+        0, 0, 0, 0,
+        0,
+        1, 1, 1, 1,
+        1, 1
+    ]
+
+    # Test Data
+    test_data = [
+        [1.1, 5.2], # Expect 0
+        [8.5, 1.0], # Expect 1
+        [0.8, 0.8], # Expect 0
+        [7.2, 9.0], # Expect 1
+        [4.0, 4.0]  # Borderline case for f0 split
+    ]
+    print(f"Train data points: {len(train_data)}")
+    print(f"Test data points: {len(test_data)}")
+
+    solution = Solution()
+
+    try:
+        info = solution.split_info(train_data, train_label, split_dim=0, split_point=4.0)
+        print(f"Split Info (dim=0, point=4.0): {info}") 
+        info2 = solution.split_info(train_data, train_label, split_dim=1, split_point=3.0)
+        print(f"Split Info (dim=1, point=3.0): {info2}")
+    except Exception as e:
+        print(f"Error during split_info test: {e}")
+
+    print("\nAttempting classification...")
+    try:
+        predictions = solution.classify(train_data, train_label, test_data)
+        print(f"Predicted labels: {predictions}")
+
+        if isinstance(predictions, list) and len(predictions) == len(test_data):
+             print("Output format (list length) seems correct.")
+             all_ints = all(isinstance(p, int) for p in predictions)
+             if all_ints:
+                 print("Output format (all integers) seems correct.")
+             else:
+                 print("ERROR: Predictions list contains non-integers!")
+        else:
+            print(f"ERROR: Output format is incorrect! Expected list of length {len(test_data)}, got {type(predictions)} of length {len(predictions) if isinstance(predictions, list) else 'N/A'}")
+
+    except Exception as e:
+        print(f"\n---!!! RUNTIME ERROR DURING CLASSIFICATION !!!---")
+        import traceback
+        traceback.print_exc()
+        print(f"---------------------------------------------------")
+
+    print("\nBasic runtime test finished.")
