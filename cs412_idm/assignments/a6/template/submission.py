@@ -137,6 +137,20 @@ class Solution:
         gain = initial_entropy - info_needed
         return gain
 
+    def _get_majority_label(self, labels: List[int]) -> int:
+        if not labels:
+            return -1
+
+        label_counts = Dict[int, int] = {}
+        for label in labels:
+            label_counts = label_counts.get(label, 0) + 1
+
+        if not label_counts:
+            return -1
+
+        max_count = 0
+        majority_label = -1
+
     def fit(self, train_data: List[List[float]], train_label: List[int]) -> None:
 
         self.root = Node()
