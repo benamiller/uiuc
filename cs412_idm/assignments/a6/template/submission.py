@@ -128,6 +128,15 @@ class Solution:
 
         return split_points
 
+    def _information_gain(self, data: List[List[float]], labels: List[int], split_dim: int, split_point: float) -> float:
+        if not labels:
+            return 0.0
+
+        initial_entropy = self._entropy(labels)
+        info_needed = self.split_info(data, labels, split_dim, split_point)
+        gain = initial_entropy - info_needed
+        return gain
+
     def fit(self, train_data: List[List[float]], train_label: List[int]) -> None:
 
         self.root = Node()
