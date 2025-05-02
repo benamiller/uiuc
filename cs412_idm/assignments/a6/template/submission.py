@@ -110,6 +110,24 @@ class Solution:
 
         return info_a
 
+    def _get_candidate_split_points(self, data: List[List[float]], dim: int) -> List[float]:
+        if not data:
+            return []
+
+        values = sorted(list(set(point[dim] for point in data if dim < len(point))))
+
+        split_points = []
+
+        if len(values) > 1:
+            candidate_splits = []
+            for i in range(len(values) - 1):
+                midpoint = (values[i] + values[i+1]) / 2.0
+                candidate_splits.append(midpoint)
+
+            split_points = sorted(list(set(candidate_splits)))
+
+        return split_points
+
     def fit(self, train_data: List[List[float]], train_label: List[int]) -> None:
 
         self.root = Node()
