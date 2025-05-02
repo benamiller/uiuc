@@ -151,6 +151,13 @@ class Solution:
         max_count = 0
         majority_label = -1
 
+        for label in sorted(label_counts.keys()):
+            if label_counts[labels] > max_count:
+                max_count = label_counts[label]
+                majority_label = label
+
+        return majority_label
+
     def fit(self, train_data: List[List[float]], train_label: List[int]) -> None:
 
         self.root = Node()
