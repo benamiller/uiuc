@@ -115,19 +115,28 @@ class Solution:
         if not data:
             return []
 
-        values = sorted(list(set(point[dim] for point in data if dim < len(point))))
+        values_in_dim = []
 
-        split_points = []
+        for point in data:
+            if dim < len(point):
+                values_in_dim.append(point[dim])
 
-        if len(values) > 1:
-            candidate_splits = []
-            for i in range(len(values) - 1):
-                midpoint = (values[i] + values[i+1]) / 2.0
+        if not values_in_dim:
+            return []
+
+        all_values_in_dim_sorted = sorted(values_in_dim)
+
+        candidate_splits = []
+
+        if len(all_values_in_dim_sorted) > 1:
+            for i in range(len(all_values_in_dim_sorted) - 1):
+                midpoint = (all_values_in_dim_sorted[i] + all_values_in_dim_sorted[i+1]) / 2.0
                 candidate_splits.append(midpoint)
 
-            split_points = sorted(list(set(candidate_splits)))
-
-        return split_points
+        if not candidate_splits:
+            return []
+        else:
+            return sorted(list(set(candidate_splits)))
 
     def _information_gain(self, data: List[List[float]], labels: List[int], split_dim: int, split_point: float) -> float:
         if not labels:
@@ -330,62 +339,62 @@ class Solution:
         return predictions
 
 
-if __name__ == "__main__":
-    print("Running basic runtime test...")
-
-    train_data = [
-        [1.0, 5.0], [1.5, 5.5], [0.5, 4.5], [2.0, 5.0], # Class 0 (low f0)
-        [1.2, 1.0],                                      # Class 0 (low f0, low f1)
-        [7.0, 1.0], [8.0, 0.5], [9.5, 1.5], [6.5, 0.8], # Class 1 (high f0)
-        [7.5, 8.0], [8.5, 9.0]                            # Class 1 (high f0, high f1)
-    ]
-    train_label = [
-        0, 0, 0, 0,
-        0,
-        1, 1, 1, 1,
-        1, 1
-    ]
-
-    # Test Data
-    test_data = [
-        [1.1, 5.2], # Expect 0
-        [8.5, 1.0], # Expect 1
-        [0.8, 0.8], # Expect 0
-        [7.2, 9.0], # Expect 1
-        [4.0, 4.0]  # Borderline case for f0 split
-    ]
-    print(f"Train data points: {len(train_data)}")
-    print(f"Test data points: {len(test_data)}")
-
-    solution = Solution()
-
-    try:
-        info = solution.split_info(train_data, train_label, split_dim=0, split_point=4.0)
-        print(f"Split Info (dim=0, point=4.0): {info}") 
-        info2 = solution.split_info(train_data, train_label, split_dim=1, split_point=3.0)
-        print(f"Split Info (dim=1, point=3.0): {info2}")
-    except Exception as e:
-        print(f"Error during split_info test: {e}")
-
-    print("\nAttempting classification...")
-    try:
-        predictions = solution.classify(train_data, train_label, test_data)
-        print(f"Predicted labels: {predictions}")
-
-        if isinstance(predictions, list) and len(predictions) == len(test_data):
-             print("Output format (list length) seems correct.")
-             all_ints = all(isinstance(p, int) for p in predictions)
-             if all_ints:
-                 print("Output format (all integers) seems correct.")
-             else:
-                 print("ERROR: Predictions list contains non-integers!")
-        else:
-            print(f"ERROR: Output format is incorrect! Expected list of length {len(test_data)}, got {type(predictions)} of length {len(predictions) if isinstance(predictions, list) else 'N/A'}")
-
-    except Exception as e:
-        print(f"\n---!!! RUNTIME ERROR DURING CLASSIFICATION !!!---")
-        import traceback
-        traceback.print_exc()
-        print(f"---------------------------------------------------")
-
-    print("\nBasic runtime test finished.")
+# if __name__ == "__main__":
+#     print("Running basic runtime test...")
+#
+#     train_data = [
+#         [1.0, 5.0], [1.5, 5.5], [0.5, 4.5], [2.0, 5.0], # Class 0 (low f0)
+#         [1.2, 1.0],                                      # Class 0 (low f0, low f1)
+#         [7.0, 1.0], [8.0, 0.5], [9.5, 1.5], [6.5, 0.8], # Class 1 (high f0)
+#         [7.5, 8.0], [8.5, 9.0]                            # Class 1 (high f0, high f1)
+#     ]
+#     train_label = [
+#         0, 0, 0, 0,
+#         0,
+#         1, 1, 1, 1,
+#         1, 1
+#     ]
+#
+#     # Test Data
+#     test_data = [
+#         [1.1, 5.2], # Expect 0
+#         [8.5, 1.0], # Expect 1
+#         [0.8, 0.8], # Expect 0
+#         [7.2, 9.0], # Expect 1
+#         [4.0, 4.0]  # Borderline case for f0 split
+#     ]
+#     print(f"Train data points: {len(train_data)}")
+#     print(f"Test data points: {len(test_data)}")
+#
+#     solution = Solution()
+#
+#     try:
+#         info = solution.split_info(train_data, train_label, split_dim=0, split_point=4.0)
+#         print(f"Split Info (dim=0, point=4.0): {info}") 
+#         info2 = solution.split_info(train_data, train_label, split_dim=1, split_point=3.0)
+#         print(f"Split Info (dim=1, point=3.0): {info2}")
+#     except Exception as e:
+#         print(f"Error during split_info test: {e}")
+#
+#     print("\nAttempting classification...")
+#     try:
+#         predictions = solution.classify(train_data, train_label, test_data)
+#         print(f"Predicted labels: {predictions}")
+#
+#         if isinstance(predictions, list) and len(predictions) == len(test_data):
+#              print("Output format (list length) seems correct.")
+#              all_ints = all(isinstance(p, int) for p in predictions)
+#              if all_ints:
+#                  print("Output format (all integers) seems correct.")
+#              else:
+#                  print("ERROR: Predictions list contains non-integers!")
+#         else:
+#             print(f"ERROR: Output format is incorrect! Expected list of length {len(test_data)}, got {type(predictions)} of length {len(predictions) if isinstance(predictions, list) else 'N/A'}")
+#
+#     except Exception as e:
+#         print(f"\n---!!! RUNTIME ERROR DURING CLASSIFICATION !!!---")
+#         import traceback
+#         traceback.print_exc()
+#         print(f"---------------------------------------------------")
+#
+#     print("\nBasic runtime test finished.")
