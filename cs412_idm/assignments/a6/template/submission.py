@@ -158,6 +158,98 @@ class Solution:
 
         return majority_label
 
+    def _find_best_split(self, data: List[List[float]], labels: List[int]) -> Tuple[int, float, float]:
+        best_gain = -1.0
+        best_split_dim = -1
+        best_split_point = -1.0
+        num_features = 0
+
+        if data:
+            num_features = len(data[0])
+
+        if num_features == 0:
+            return -1, -1.0, -1.0
+
+        current_entropy = self._entropy(labels)
+        if current_entropy == 0:
+            return  -1, -1.0, 0.0
+
+        for dim in range(num_features):
+            candidate_points = self._get_candidate_split_points(data, dim)
+            for point in candidate_points:
+                gain = self._information_gain(data, labels, dim, point)
+
+                tolerance = 1e-9
+                if gain > best_gain + tolerance:
+                    best_gain = gain
+                    best_split_dim = dim
+                    best_split_point = point
+                elif abs(gain - best_gain) < tolerance:
+                    if dim < best_split_dim:
+                        best_gain = gain
+                        best_split_dim = dim
+                        best_split_point = point
+
+        if best_gain <= 0 + tolerance:
+            return -1, -1.0, 0.0
+
+        return best_split_dim, best_split_point, best_gain
+
+    def _build_tree(self, node: Node, data: List[List[float]], labels: List[int], depth: int):
+        node.label = self._get_majority_label(labels)
+
+        unique_labels: Set[int] = set(labels)
+        if depth >= self.max_depth or len(unique_labels) <= 1 or not data:
+            node.split_dim = -1
+            node.split_point = -1.0
+            node.left = None
+            node.right = None
+            return
+
+        split_dim, split_point, best_gain = self._find_best_split(data, labels)
+
+        if split_dim == -1 or best_gain <= 0:
+            node.split_dim = -1
+            node.split_point = -1.0
+            node.left = None
+            node.right = None
+            return
+
+        node.split_dim = split_dim
+        node.split_point = split_point
+
+        left_data = List[List[float]] = []
+        left_labels: List[int] = []
+        right_data = List[List[float]] = []
+        right_labels = List[int] = []
+
+        for i, point in enumerate(data):
+            if split_dim < len(point):
+                if point[split_dim] <= split_point:
+                    left_data.append(point)
+                    left_labels.append(labels[i])
+                else:
+                    right_data.append(point)
+                    right_labels.append(labels[i])
+
+        if left_data:
+            node.left = Node()
+            self._built_tree(node.left, left_data, left_labels, depth + 1)
+        else:
+            node.left = Node()
+            node.left.label = node.label
+            node.left.split_dim = -1
+            node.left.split_point = -1.0
+
+        if right_data:
+            node.right = Node()
+            self._built_tree(node.right, right_data, right_labels, depth + 1)
+        else:
+            node.right = Node()
+            node.right.label = node.label
+            node.right.split_dim = -1
+            node.right.split_point = -1.0
+
     def fit(self, train_data: List[List[float]], train_label: List[int]) -> None:
 
         self.root = Node()
