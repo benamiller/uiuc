@@ -251,9 +251,6 @@ class Solution:
             node.right.split_point = -1.0
 
     def fit(self, train_data: List[List[float]], train_label: List[int]) -> None:
-
-        self.root = Node()
-
         """
         Fit the decision tree model using the provided training data and labels.
 
@@ -272,6 +269,15 @@ class Solution:
 
         It is best to use a different method (such as in the example above) to build the decision tree.
         """
+
+        self.root = Node()
+        if not train_data or not train_label:
+            self.root.label = -1
+            self.root.split_dim = -1
+            self.root.split_point = -1.0
+            return
+
+        self._build_tree(self.root, train_data, train_label, depth=0)
 
     def classify(self, train_data: List[List[float]], train_label: List[int], test_data: List[List[float]]) -> List[int]:
         """
