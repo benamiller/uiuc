@@ -14,7 +14,22 @@ def get_model(method):
     model = None
     # Implement your code to return the appropriate model with the specified parameters here
     # Do NOT change the return statement
-    
+    model = None
+    random_seed = 42
+
+    if method == "DecisionTreeClassifier":
+        model = DecisionTreeClassifier(max_depth=10, random_state=random_seed)
+    elif method == "GaussianNB":
+        model = GaussianNB()
+    elif method == "LogisticRegression":
+        model = LogisticRegression(penalty='l2', solver='lbfgs', random_state=random_seed, multi_class='multinomial')
+    elif method == "RandomForestClassifier":
+        model = RandomForestClassifier(max_depth=15, n_estimators=250, random_state=random_seed)
+    elif method == "XGBClassifier":
+        model = XGBClassifier(max_depth=7, random_state=random_seed)
+    else:
+        raise ValueError(f"Unknown method: {method}")
+
     return model
 
 def get_splits(n, k, seed):
