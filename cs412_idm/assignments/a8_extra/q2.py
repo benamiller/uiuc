@@ -36,5 +36,38 @@ def my_train_test(method, X, y, pi, k):
     errors = []
     # Implement your code to construct the list of errors here
     # Do NOT change the return statement
+    n = len(y)
+
+    X = np.asarray(X)
+    y = np.asarray(y)
+
+    n_train = int(np.floor(pi * n))
+    if n_train <= 0 or n_train >= n:
+        raise ValueError("Invalid")
+
+    all_indices = np.arange(n)
+
+    for _ in range(k):
+        shuffled_indices = np.random.permutation(all_indices)
+
+        train_indices = shuffled_indices[:n_train]
+        test_indices = shuffled_indices[n_train:]
+
+        X_train = X[train_indices]
+        y_train = y[train_indices]
+        X_test = X[test_indices]
+        y_test = y[test_indices]
+
+        if len(y_test) == 0:
+            errors.append(0.0)
+            continue
+
+        model = get_model(method)
+        model.fit(X_train, y_train)
+
+        y_pred = model.predict(X_test)
+        num_wrong = np.sum(y_pred != y_test)
+        error_rate = num_wrong / len(y_test)
+        errors.append(error_rate)
 
     return np.array(errors)
