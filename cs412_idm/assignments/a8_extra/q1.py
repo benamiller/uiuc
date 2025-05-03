@@ -36,6 +36,23 @@ def get_splits(n, k, seed):
     splits = None
     # Implement your code to construct the splits here
     # Do NOT change the return statement
+    splits = []
+    indices = list(range(n))
+
+    random.seed(seed)
+    random.shuffle(indices)
+
+    base_fold_size = n // k
+    num_larger_folds = n % k
+
+    start = 0
+    for i in range(k):
+        current_fold_size = base_fold_size + (1 if i < num_larger_folds else 0)
+
+        fold_indices = indices[start: start + current_fold_size]
+        splits.append(fold_indices)
+
+        start += current_fold_size
 
     return splits
 
