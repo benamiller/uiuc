@@ -60,5 +60,34 @@ def my_cross_val(method, X, y, splits):
     errors = []
     # Implement your code to construct the list of errors here
     # Do NOT change the return statement
-    
+
+    k = len(splits)
+    n = len(y)
+
+    X = np.asarray(X)
+    y = np.asarray(y)
+
+    for i in range(k):
+        test_indices_set = set(splits[i])
+        test_indices = splits[i]
+
+        train_indices = [idx for idx in range(n) if idx not in test_indices_set]
+
+        X_train = X[train_indices]
+        y_train = y[train_indices]
+        X_test = X[test_indices]
+        y_test = y[test_indices]
+
+        if len(y_test) == 0:
+            errors.append(0.0)
+            continue
+
+        model = get_model(method)
+        model.fit(X_train, y_train)
+
+        y_pred = model.predict(X_test)
+        num_wrong = np.sum(y_pred != y_test)
+        error_rate = num_wrong / len(y_test)
+        errors.append(error_rate)
+
     return np.array(errors)
