@@ -7,4 +7,5 @@ sumList [] = 0
 sumList (x:xs) = x + sumList xs
 
 power :: Integer -> Integer -> Integer
-power = undefined
+power x 0 = 1
+power x y = x * power x (y-1)
