@@ -12,3 +12,8 @@ fun1_tail xx = aux xx 0
   where
     aux [] a = a
     aux (x:xs) a | even x = aux xs (a-1) | odd x = aux xs (a+1)
+
+fun2_tail xx = aux xx 0
+  where
+    aux 1 a = a
+    aux n a = aux (n `div` 2) (a+1)
