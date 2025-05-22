@@ -15,6 +15,10 @@ summedList = sumList [1,2,3]
   where
     sumList x = sum (x)
 
+summedList2 = sumList [1,2,3]
+  where
+    sumList [] = 0
+    sumList (x:xs) = x + sumList xs
 
 incedList = incList [1,2,3]
   where
