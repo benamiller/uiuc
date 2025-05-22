@@ -23,3 +23,7 @@ summedList2 = sumList [1,2,3]
 incedList = incList [1,2,3]
   where
     incList l = map inc (l)
+
+
+printListHead (x:xs) = print x
+printListTail (x:xs) = print xs
