@@ -17,3 +17,8 @@ fun2_tail xx = aux xx 0
   where
     aux 1 a = a
     aux n a = aux (n `div` 2) (a+1)
+
+fun3_tail n = aux n 1 1
+  where
+    aux 0 f1 f2 = f1
+    aux n f1 f2 = aux (n-1) f2 (f1+f2)
