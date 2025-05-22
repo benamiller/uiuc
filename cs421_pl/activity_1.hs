@@ -24,6 +24,11 @@ incedList = incList [1,2,3]
   where
     incList l = map inc (l)
 
+incedList2 = incList [1,2,3]
+  where
+    incList [] = []
+    incList (x:xs) = x+1 : incList xs
+
 
 printListHead (x:xs) = print x
 printListTail (x:xs) = print xs
