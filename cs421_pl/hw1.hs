@@ -6,3 +6,5 @@ sumList :: Num t => [t] -> t
 sumList [] = 0
 sumList (x:xs) = x + sumList xs
 
+power :: Integer -> Integer -> Integer
+power = undefined
