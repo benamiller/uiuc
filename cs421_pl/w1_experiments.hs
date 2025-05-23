@@ -23,6 +23,11 @@ incL (x:xs) = x+1 : incL xs
 
 incLValue = incL [1,2,3]
 
+doubleL [] = []
+doubleL (x:xs) = x*2 : doubleL xs
+
+doubleLValue = doubleL [1,2,3]
+
 main :: IO ()
 main = do
   print sqrValue
@@ -34,3 +39,4 @@ main = do
   print twiceValue2
   print ((\x -> x + 1) 41)
   print incLValue
+  print doubleLValue
