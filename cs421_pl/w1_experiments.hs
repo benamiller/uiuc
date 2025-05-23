@@ -28,6 +28,16 @@ doubleL (x:xs) = x*2 : doubleL xs
 
 doubleLValue = doubleL [1,2,3]
 
+mymap f [] = []
+mymap f (x:xs) = f x : mymap f xs
+
+incLMap = mymap inc
+
+doubleLMap = mymap double
+
+incLMapValue = incLMap [1,2,3]
+doubleLMapValue = doubleLMap [1,2,3]
+
 main :: IO ()
 main = do
   print sqrValue
@@ -40,3 +50,5 @@ main = do
   print ((\x -> x + 1) 41)
   print incLValue
   print doubleLValue
+  print incLMapValue
+  print doubleLMapValue
