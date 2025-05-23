@@ -18,6 +18,11 @@ twice f x = f (f x)
 twiceValue = twice inc 5
 twiceValue2 = twice twice inc 4
 
+incL [] = []
+incL (x:xs) = x+1 : incL xs
+
+incLValue = incL [1,2,3]
+
 main :: IO ()
 main = do
   print sqrValue
@@ -28,3 +33,4 @@ main = do
   print twiceValue
   print twiceValue2
   print ((\x -> x + 1) 41)
+  print incLValue
