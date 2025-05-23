@@ -24,3 +24,4 @@ main = do
   print composeValue
   print twiceValue
   print twiceValue2
+  print ((\x -> x + 1) 41)
