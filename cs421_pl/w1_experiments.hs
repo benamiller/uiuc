@@ -38,6 +38,15 @@ doubleLMap = mymap double
 incLMapValue = incLMap [1,2,3]
 doubleLMapValue = doubleLMap [1,2,3]
 
+myfoldr f z [] = z
+myfoldr f z (x:xs) = f x (foldr f z xs)
+
+sumList = myfoldr (+) 0
+prodList = myfoldr (*) 1
+
+sumListValue = sumList [1,2,3,4]
+prodListValue = prodList [1,2,3,4]
+
 main :: IO ()
 main = do
   print sqrValue
@@ -52,3 +61,5 @@ main = do
   print doubleLValue
   print incLMapValue
   print doubleLMapValue
+  print sumListValue
+  print prodListValue
