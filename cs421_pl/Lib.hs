@@ -69,7 +69,10 @@ inclist (x:xs) = x+1 : inclist xs
 --- ### sumlist
 
 -- don't forget to put the type declaration or you will lose points!
-sumlist = undefined
+sumlist :: Num a => [a] -> a
+sumlist list = sumlistacc list 0
+sumlistacc [] _ = 0
+sumlistacc (x:xs) acc = sumlistacc xs acc+x
 
 --- ### myzip
 
