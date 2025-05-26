@@ -77,7 +77,10 @@ sumlistacc (x:xs) acc = sumlistacc xs acc+x
 --- ### myzip
 
 -- don't forget to put the type declaration or you will lose points!
-myzip = undefined
+myzip :: [a] -> [b] -> [(a,b)]
+myzip [] b = []
+myzip a [] = []
+myzip (a:as) (b:bs) = (a,b) : myzip as bs
 
 --- ### addpairs
 
