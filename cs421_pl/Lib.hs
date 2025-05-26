@@ -109,9 +109,13 @@ nats = [0,1..]
 --- ### fib
 
 -- don't forget to put the type declaration or you will lose points!
+-- fib :: [Integer]
+-- fib = fibHelp 0 1
+-- fibHelp a b = a : fibHelp b (a+b)
+
+-- cooler fib with tail
 fib :: [Integer]
-fib = fibHelp 0 1
-fibHelp a b = a : fibHelp b (a+b)
+fib = 0 : 1 : addpairs fib (tail fib)
 
 --- Set Theory
 --- ----------
