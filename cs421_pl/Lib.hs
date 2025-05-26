@@ -85,12 +85,20 @@ myzip (a:as) (b:bs) = (a,b) : myzip as bs
 --- ### addpairs
 
 -- don't forget to put the type declaration or you will lose points!
-addpairs = undefined
+addpairsHelp :: Num a => [(a, a)] -> [a]
+addpairsHelp [] = []
+addpairsHelp ((a, b):pairs) = a+b : addpairsHelp pairs
+
+addpairs :: (Num a) => [a] -> [a] -> [a]
+addpairs a b =
+  let paired = myzip a b
+  in addpairsHelp paired
 
 --- ### ones
 
 -- don't forget to put the type declaration or you will lose points!
-ones = undefined
+ones :: [Integer]
+ones = [1,1..1]
 
 --- ### nats
 
