@@ -62,7 +62,9 @@ app (a:as) b = a : app as b
 --- ### inclist
 
 -- don't forget to put the type declaration or you will lose points!
-inclist = undefined
+inclist :: Num a => [a] -> [a]
+inclist [] = []
+inclist (x:xs) = x+1 : inclist xs
 
 --- ### sumlist
 
