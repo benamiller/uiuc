@@ -98,12 +98,13 @@ addpairs a b =
 
 -- don't forget to put the type declaration or you will lose points!
 ones :: [Integer]
-ones = [1,1..1]
+ones = 1 : ones
 
 --- ### nats
 
 -- don't forget to put the type declaration or you will lose points!
-nats = undefined
+nats :: [Integer]
+nats = [0,1..]
 
 --- ### fib
 
