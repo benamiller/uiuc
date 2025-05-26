@@ -109,7 +109,9 @@ nats = [0,1..]
 --- ### fib
 
 -- don't forget to put the type declaration or you will lose points!
-fib = undefined
+fib :: [Integer]
+fib = fibHelp 0 1
+fibHelp a b = a : fibHelp b (a+b)
 
 --- Set Theory
 --- ----------
