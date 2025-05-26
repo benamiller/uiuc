@@ -10,3 +10,7 @@ palindromeCheck :: [String] -> [Bool]
 palindromeCheck [] = []
 palindromeCheck list = map palindromeCheckHelp list
 palindromeCheckHelp string = string == reverse string
+
+declist :: Num a => [a] -> [a]
+declist [] = []
+declist list = map (\x -> x - 1) list
