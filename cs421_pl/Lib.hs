@@ -133,7 +133,14 @@ add a (y:ys)
 --- ### union
 
 -- don't forget to put the type declaration or you will lose points!
-union = undefined
+union :: Ord a => [a] -> [a] -> [a]
+union [] [] = []
+union x [] = x
+union [] y = y
+union (x:xs) (y:ys)
+  | x < y = x : union xs (y:ys)
+  | x == y = x : union xs ys
+  | x > y = y : union (x:xs) ys
 
 --- ### intersect
 
