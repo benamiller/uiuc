@@ -157,10 +157,16 @@ intersect (x:xs) (y:ys)
 --- ### powerset
 
 -- don't forget to put the type declaration or you will lose points!
-powerset = undefined
--- powerset :: Ord a => [a] -> [[a]]
--- powerset [] = [[]]
--- powerset (x:xs) = 
+mymap f [] = []
+mymap f (x:xs) = f x : mymap f xs
+
+powerset :: Ord a => [a] -> [[a]]
+powerset [] = [[]]
+powerset (x:xs) =
+  let
+    noX = powerset xs
+    withX = mymap (add x) noX
+  in union noX withX
 
 --- Higher Order Functions
 --- ----------------------
