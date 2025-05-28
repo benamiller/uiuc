@@ -157,7 +157,9 @@ intersect (x:xs) (y:ys)
 --- ### powerset
 
 -- don't forget to put the type declaration or you will lose points!
-powerset = undefined
+-- powerset :: Ord a => [a] -> [[a]]
+-- powerset [] = [[]]
+-- powerset (x:xs) = 
 
 --- Higher Order Functions
 --- ----------------------
@@ -165,7 +167,9 @@ powerset = undefined
 --- ### inclist'
 
 -- don't forget to put the type declaration or you will lose points!
-inclist' = undefined
+inclist' :: Num a => [a] -> [a]
+inclist' [] = []
+inclist' x = P.map (+1) x
 
 --- ### sumlist'
 
