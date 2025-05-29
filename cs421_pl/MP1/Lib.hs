@@ -47,7 +47,8 @@ eval (MultExp exps) = product (map eval exps)
 --- ### list2cons'
 
 -- don't forget to put the type declaration or you will lose points!
-list2cons' = undefined
+list2cons' :: [a] -> List a
+list2cons' l = foldr Cons Nil l
 
 --- ### BinTree
 
