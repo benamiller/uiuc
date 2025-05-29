@@ -39,7 +39,10 @@ cons2list (Cons x xs) = x : cons2list xs
 --- ### eval
 
 -- don't forget to put the type declaration or you will lose points!
-eval = undefined
+eval :: Exp -> Integer
+eval (IntExp i) = i
+eval (PlusExp exps) = sum (map eval exps)
+eval (MultExp exps) = product (map eval exps)
 
 --- ### list2cons'
 
