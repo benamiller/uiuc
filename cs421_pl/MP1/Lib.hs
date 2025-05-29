@@ -32,7 +32,9 @@ list2cons (x:xs) = Cons x (list2cons xs)
 --- ### cons2list
 
 -- don't forget to put the type declaration or you will lose points!
-cons2list = undefined
+cons2list :: List a -> [a]
+cons2list Nil = []
+cons2list (Cons x xs) = x : cons2list xs
 
 --- ### eval
 
