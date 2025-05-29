@@ -53,11 +53,16 @@ list2cons' l = foldr Cons Nil l
 --- ### BinTree
 
 -- BinTree
+data BinTree a = Leaf
+        | Node a (BinTree a) (BinTree a)
+  deriving (Show)
 
 --- ### sumTree
 
 -- don't forget to put the type declaration or you will lose points!
-sumTree = undefined
+sumTree :: Num a => BinTree a -> a
+sumTree Leaf = 0
+sumTree (Node val left right) = val + sumTree left + sumTree right
 
 --- ### SimpVal
 
