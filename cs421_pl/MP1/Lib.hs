@@ -67,8 +67,15 @@ sumTree (Node val left right) = val + sumTree left + sumTree right
 --- ### SimpVal
 
 -- SimpVal
+data SimpVal = IntVal Integer
+        | BoolVal Bool
+        | StrVal String
+        | ExnVal String
+  deriving (Show)
 
 --- ### liftIntOp
 
 -- don't forget to put the type declaration or you will lose points!
-liftIntOp = undefined
+liftIntOp :: (Integer -> Integer -> Integer) -> SimpVal -> SimpVal -> SimpVal
+liftIntOp op (IntVal x) (IntVal y) = IntVal (op x y)
+liftIntOp _  _          _ = ExnVal "not an IntVal!"
