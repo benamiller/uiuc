@@ -178,7 +178,15 @@ eval (AppExp e1 args) env =
 
 --- ### Let Expressions
 
-eval (LetExp pairs body) env = undefined
+eval (LetExp pairs body) env =
+    let newVals = map (\(_, e) -> eval e env) pairs
+    in case checkExceptions newVals of
+        Just exn -> exn
+        Nothing ->
+            let newNames = map fst pairs
+                newBindings = H.fromList $ zip newNames newVals
+                newEnv = H.union newBindings env
+            in eval body newEnv
 
 --- Statements
 --- ----------
