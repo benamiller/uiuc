@@ -120,41 +120,31 @@ eval (VarExp s) env = case H.lookup s env of
 eval (IntOpExp op e1 e2) env =
     let v1 = eval e1 env
         v2 = eval e2 env
-    in case v1 of
-        ExnVal s -> v1
-        IntVal i1 ->
-            let v2 = eval e2 env
-            in case v2 of
-                IntVal i2 ->
-                    if op == "/" && i2 == 0
-                        then ExnVal "Division by 0"
-                        else case H.lookup op intOps of
-                            Nothing -> ExnVal "No matching operator"
-                            Just f -> liftIntOp f v1 v2
-                _ -> ExnVal "Cannot lift"
-        _ -> ExnVal "Cannot lift"
+    in
+        if op == "/" && v2 == IntVal 0 then
+            ExnVal "Division by 0"
+        else
+            case H.lookup op intOps of
+                Nothing -> ExnVal "No matching operator"
+                Just f -> liftIntOp f v1 v2
 
 --- ### Boolean and Comparison Operators
 
 eval (BoolOpExp op e1 e2) env =
     let v1 = eval e1 env
         v2 = eval e2 env
-    in case (v1, v2) of
-        (BoolVal _, BoolVal _) ->
-            case H.lookup op boolOps of
-                Nothing -> ExnVal "No matching operator"
-                Just f -> liftBoolOp f v1 v2
-        _ -> ExnVal "Cannot lift"
+    in
+        case H.lookup op boolOps of
+            Nothing -> ExnVal "No matching operator"
+            Just f -> liftBoolOp f v1 v2
 
 eval (CompOpExp op e1 e2) env =
     let v1 = eval e1 env
         v2 = eval e2 env
-    in case (v1, v2) of
-        (IntVal _, IntVal _) ->
-            case H.lookup op compOps of
-                Nothing -> ExnVal "No matching operator"
-                Just f -> liftCompOp f v1 v2
-        _ -> ExnVal "Cannot lift"
+    in
+        case H.lookup op compOps of
+            Nothing -> ExnVal "No matching operator"
+            Just f -> liftCompOp f v1 v2
 
 --- ### If Expressions
 
