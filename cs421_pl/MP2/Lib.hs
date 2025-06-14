@@ -102,12 +102,14 @@ eval :: Exp -> Env -> Val
 
 --- ### Constants
 
-eval (IntExp i)  _ = undefined
-eval (BoolExp i) _ = undefined
+eval (IntExp i)  _ = IntVal i 
+eval (BoolExp i) _ = BoolVal i
 
 --- ### Variables
 
-eval (VarExp s) env = undefined
+eval (VarExp s) env = case H.lookup s env of
+  Just val -> val
+  Nothing -> ExnVal "No match in env"
 
 --- ### Arithmetic
 
