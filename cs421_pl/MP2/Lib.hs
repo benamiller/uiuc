@@ -97,6 +97,10 @@ liftCompOp _ _ _ = ExnVal "Cannot lift"
 
 --- Eval
 --- ----
+checkExceptions :: [Val] -> Maybe Val
+checkExceptions [] = Nothing
+checkExceptions (v@(ExnVal _):_) = Just v
+checkExceptions (_:vs) = checkExceptions vs
 
 eval :: Exp -> Env -> Val
 
@@ -156,10 +160,6 @@ eval (IfExp e1 e2 e3) env =
 
 --- ### Functions and Function Application
 
-checkExceptions :: [Val] -> Maybe Val
-checkExceptions [] = Nothing
-checkExceptions (v@(ExnVal _):_) = Just v
-checkExceptions (_:vs) = checkExceptions vs
 
 eval (FunExp params body) env = CloVal params body env
 
