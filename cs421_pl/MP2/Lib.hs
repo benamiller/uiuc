@@ -231,6 +231,19 @@ exec (IfStmt e1 s1 s2) penv env =
 
 --- ### Procedure and Call Statements
 
-exec p@(ProcedureStmt name args body) penv env = undefined
+exec p@(ProcedureStmt name args body) penv env =
+    let newPenv = H.insert name p env
+    in ("", newPenv, env)
 
-exec (CallStmt name args) penv env = undefined
+exec (CallStmt name args) penv env =
+    case H.lookup name penv of
+        Nothing -> ("Procedure " ++ name ++ " is totally undefined", penv, env)
+        Just (ProcedureStmt _ params body) ->
+            let argVals = map (`eval` env) args
+            in case checkExceptions argVals of
+                Just (ExnVal s) -> ("Exn: " ++ s, penv, env)
+                _ ->
+                    let newBindings = H.fromList $ zip params argVals
+                        callEnv = H.union newBindings env
+                    in exec body penv callEnv
+        _ -> ("Found a non-procedure, but weird", penv, env)
