@@ -120,7 +120,7 @@ eval (IntOpExp op e1 e2) env =
         (ExnVal _, _) -> v1
         (_, ExnVal _) -> v2
         (IntVal i1, IntVal i2) ->
-            if op == "/" && i2 == 0:
+            if op == "/" && i2 == 0
                 then ExnVal "Cannot divide by 0"
                 else liftIntOp (fromJust $ H.lookup op intOps) v1 v2
         _ -> ExnVal "Unliftable"
