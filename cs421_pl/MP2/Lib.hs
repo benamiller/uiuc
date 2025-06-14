@@ -140,7 +140,10 @@ eval (BoolOpExp op e1 e2) env =
     in case (v1, v2) of
         (ExnVal _, _) -> v1
         (_, ExnVal _) -> v2
-        (BoolVal _, BoolVal _) -> liftBoolOp (fromJust $ H.lookup op boolOps) v1 v2
+        (BoolVal _, BoolVal _) ->
+            case H.lookup op boolOps of
+                Nothing -> ExnVal "No bool op matches"
+                Just f -> liftBoolOp f v1 v2
         _ -> ExnVal "Unliftable"
 
 eval (CompOpExp op e1 e2) env =
