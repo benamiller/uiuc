@@ -222,7 +222,12 @@ exec (SeqStmt statements) penv env =
 
 --- ### If Statements
 
-exec (IfStmt e1 s1 s2) penv env = undefined
+exec (IfStmt e1 s1 s2) penv env =
+    case eval e1 env of
+        BoolVal True -> exec s1 penv env
+        BoolVal False -> exec s2 penv env
+        ExnVal s -> (s, penv, env)
+        _ -> ("Non-bool probably", penv, env)
 
 --- ### Procedure and Call Statements
 
