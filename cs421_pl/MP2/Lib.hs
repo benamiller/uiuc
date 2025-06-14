@@ -204,7 +204,7 @@ exec (SetStmt var e) penv env =
     let val = eval e env
     in case val of
         ExnVal s -> (show val, penv, env)
-        _ -> ("", penv, H.insert var val env
+        _ -> ("", penv, H.insert var val env)
 
 --- ### Sequencing
 
