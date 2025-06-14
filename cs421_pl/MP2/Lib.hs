@@ -218,7 +218,7 @@ exec (SeqStmt statements) penv env =
         statements
     where
         foldl' f z [] = z
-        foldl' f z (x:xs) = let ' = f z x in z' `seq` foldl' f z' xs
+        foldl' f z (x:xs) = let z' = f z x in z' `seq` foldl' f z' xs
 
 --- ### If Statements
 
