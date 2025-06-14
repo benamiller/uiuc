@@ -116,6 +116,14 @@ eval (VarExp s) env = case H.lookup s env of
 eval (IntOpExp op e1 e2) env =
     let v1 = eval e1 env
         v2 = eval e2 env
+    in case (v1, v2) of
+        (ExnVal _, _) -> v1
+        (_, ExnVal _) -> v2
+        (IntVal i1, IntVal i2) ->
+            if op == "/" && i2 == 0:
+                then ExnVal "Cannot divide by 0"
+                else liftIntOp (fromJust $ H.lookup op intOps) v1 v2
+        _ -> ExnVal "Cannot lift"
 
 --- ### Boolean and Comparison Operators
 
