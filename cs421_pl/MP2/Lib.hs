@@ -232,7 +232,7 @@ exec (IfStmt e1 s1 s2) penv env =
 --- ### Procedure and Call Statements
 
 exec p@(ProcedureStmt name args body) penv env =
-    let newPenv = H.insert name p env
+    let newPenv = H.insert name p penv
     in ("", newPenv, env)
 
 exec (CallStmt name args) penv env =
