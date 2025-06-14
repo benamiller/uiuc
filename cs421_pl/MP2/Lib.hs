@@ -120,17 +120,19 @@ eval (VarExp s) env = case H.lookup s env of
 eval (IntOpExp op e1 e2) env =
     let v1 = eval e1 env
         v2 = eval e2 env
-    in case (v1, v2) of
-        (ExnVal _, _) -> v1
-        (_, ExnVal _) -> v2
-        (IntVal i1, IntVal i2) ->
-            if op == "/" && i2 == 0
-                then ExnVal "Cannot divide by 0"
-                else
-                    case H.lookup op intOps of
-                        Nothing -> ExnVal "No op matches"
-                        Just f -> liftIntOp f v1 v2
-        _ -> ExnVal "Unliftable"
+    in case v1 of
+        ExnVal s -> v1
+        IntVal i1 ->
+            let v2 = eval e2 env
+            in case v2 of
+                IntVal i2 ->
+                    if op == "/" && i2 == 0
+                        then ExnVal "Division by 0"
+                        else case H.lookup op intOps of
+                            Nothing -> ExnVal "No matching operator"
+                            Just f -> liftIntOp f v1 v2
+                _ -> ExnVal "Cannot lift"
+        _ -> ExnVal "Cannot lift"
 
 --- ### Boolean and Comparison Operators
 
@@ -138,25 +140,21 @@ eval (BoolOpExp op e1 e2) env =
     let v1 = eval e1 env
         v2 = eval e2 env
     in case (v1, v2) of
-        (ExnVal _, _) -> v1
-        (_, ExnVal _) -> v2
         (BoolVal _, BoolVal _) ->
             case H.lookup op boolOps of
-                Nothing -> ExnVal "No bool op matches"
+                Nothing -> ExnVal "No matching operator"
                 Just f -> liftBoolOp f v1 v2
-        _ -> ExnVal "Unliftable"
+        _ -> ExnVal "Cannot lift"
 
 eval (CompOpExp op e1 e2) env =
     let v1 = eval e1 env
         v2 = eval e2 env
     in case (v1, v2) of
-        (ExnVal _, _) -> v1
-        (_, ExnVal _) -> v2
         (IntVal _, IntVal _) ->
             case H.lookup op compOps of
-                Nothing -> ExnVal "No comp op matches"
+                Nothing -> ExnVal "No matching operator"
                 Just f -> liftCompOp f v1 v2
-        _ -> ExnVal "Unliftable"
+        _ -> ExnVal "Cannot lift"
 
 --- ### If Expressions
 
@@ -164,8 +162,7 @@ eval (IfExp e1 e2 e3) env =
     case eval e1 env of
         BoolVal True -> eval e2 env
         BoolVal False -> eval e3 env
-        ExnVal s -> ExnVal s
-        _ -> ExnVal "Condition not Bool"
+        _ -> ExnVal "Condition is not a Bool"
 
 --- ### Functions and Function Application
 
@@ -181,8 +178,7 @@ eval (AppExp e1 args) env =
                     let newBindings = H.fromList $ zip params argVals
                         newEnv = H.union newBindings cloEnv
                     in eval body newEnv
-        ExnVal s -> ExnVal s
-        _ -> ExnVal "No closure"
+        _ -> ExnVal "Apply to non-closure"
 
 --- ### Let Expressions
 
@@ -234,8 +230,7 @@ exec (IfStmt e1 s1 s2) penv env =
     case eval e1 env of
         BoolVal True -> exec s1 penv env
         BoolVal False -> exec s2 penv env
-        ExnVal s -> (s, penv, env)
-        _ -> ("Non-bool probably", penv, env)
+        _ -> ("exn: Condition is not a Bool", penv, env)
 
 --- ### Procedure and Call Statements
 
@@ -245,11 +240,11 @@ exec p@(ProcedureStmt name args body) penv env =
 
 exec (CallStmt name args) penv env =
     case H.lookup name penv of
-        Nothing -> ("Procedure " ++ name ++ " is totally undefined", penv, env)
+        Nothing -> ("Procedure " ++ name ++ " undefined", penv, env)
         Just (ProcedureStmt _ params body) ->
             let argVals = map (`eval` env) args
             in case checkExceptions argVals of
-                Just (ExnVal s) -> ("Exn: " ++ s, penv, env)
+                Just (ExnVal s) -> ("exn: " ++ s, penv, env)
                 _ ->
                     let newBindings = H.fromList $ zip params argVals
                         callEnv = H.union newBindings env
