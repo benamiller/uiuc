@@ -123,13 +123,26 @@ eval (IntOpExp op e1 e2) env =
             if op == "/" && i2 == 0:
                 then ExnVal "Cannot divide by 0"
                 else liftIntOp (fromJust $ H.lookup op intOps) v1 v2
-        _ -> ExnVal "Cannot lift"
+        _ -> ExnVal "Unliftable"
 
 --- ### Boolean and Comparison Operators
 
-eval (BoolOpExp op e1 e2) env = undefined
+eval (BoolOpExp op e1 e2) env =
+    let v1 = eval e1 env
+        v2 = eval e2 env
+    in case (v1, v2) of
+        (ExnVal _, _) -> v1
+        (_, ExnVal _) -> v2
+        (BoolVal _, BoolVal _) -> liftBoolOp (fromJust $ H.lookup op boolOps) v1 v2
+        _ -> ExnVal "Unliftable"
 
-eval (CompOpExp op e1 e2) env = undefined
+eval (CompOpExp op e1 e2) env =
+    let v1 = eval e1 env
+        v2 = eval e2 env
+    in case (v1, v2) of
+        (ExnVal _, _) -> v1
+        (_, ExnVal _) -> v2
+        (IntVal _, IntVal _) -> liftCompOp (fromJust $ H.lookup op compOps) v1 v2
 
 --- ### If Expressions
 
