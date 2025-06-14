@@ -160,7 +160,6 @@ eval (IfExp e1 e2 e3) env =
 
 --- ### Functions and Function Application
 
-
 eval (FunExp params body) env = CloVal params body env
 
 eval (AppExp e1 args) env =
