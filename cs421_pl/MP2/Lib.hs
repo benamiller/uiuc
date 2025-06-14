@@ -156,9 +156,25 @@ eval (IfExp e1 e2 e3) env =
 
 --- ### Functions and Function Application
 
-eval (FunExp params body) env = undefined
+checkExceptions :: [Val] -> Maybe Val
+checkExceptions [] = Nothing
+checkExceptions (v@(ExnVal _):_) = Just v
+checkExceptions (_:vs) = checkExceptions vs
 
-eval (AppExp e1 args) env = undefined
+eval (FunExp params body) env = CloVal params body env
+
+eval (AppExp e1 args) env =
+    case eval e1 env of
+        CloVal params body cloEnv ->
+            let argVals = map (`eval` env) args
+            in case checkExceptions argVals of
+                Just exn -> exn
+                Nothing ->
+                    let newBindings = H.fromList $ zip params argVals
+                        newEnv = H.union newBindings cloEnv
+                    in eval body newEnv
+        ExnVal s -> ExnVal s
+        _ -> ExnVal "No closure"
 
 --- ### Let Expressions
 
