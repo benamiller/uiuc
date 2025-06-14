@@ -152,7 +152,10 @@ eval (CompOpExp op e1 e2) env =
     in case (v1, v2) of
         (ExnVal _, _) -> v1
         (_, ExnVal _) -> v2
-        (IntVal _, IntVal _) -> liftCompOp (fromJust $ H.lookup op compOps) v1 v2
+        (IntVal _, IntVal _) ->
+            case H.lookup op compOps of
+                Nothing -> ExnVal "No comp op matches"
+                Just f -> liftCompOp f v1 v2
         _ -> ExnVal "Unliftable"
 
 --- ### If Expressions
