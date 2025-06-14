@@ -143,7 +143,7 @@ eval (CompOpExp op e1 e2) env =
         (ExnVal _, _) -> v1
         (_, ExnVal _) -> v2
         (IntVal _, IntVal _) -> liftCompOp (fromJust $ H.lookup op compOps) v1 v2
-        -> ExnVal "Unliftable"
+        _ -> ExnVal "Unliftable"
 
 --- ### If Expressions
 
