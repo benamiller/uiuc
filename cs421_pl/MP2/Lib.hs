@@ -147,7 +147,12 @@ eval (CompOpExp op e1 e2) env =
 
 --- ### If Expressions
 
-eval (IfExp e1 e2 e3) env = undefined
+eval (IfExp e1 e2 e3) env =
+    case eval e1 env of
+        BoolVal True -> eval e2 env
+        BoolVal False -> eval e3 env
+        ExnVal s -> ExnVal s
+        _ -> ExnVal "Condition not Bool"
 
 --- ### Functions and Function Application
 
