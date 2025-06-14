@@ -108,12 +108,14 @@ eval (BoolExp i) _ = BoolVal i
 --- ### Variables
 
 eval (VarExp s) env = case H.lookup s env of
-  Just val -> val
-  Nothing -> ExnVal "No match in env"
+    Just val -> val
+    Nothing -> ExnVal "No match in env"
 
 --- ### Arithmetic
 
-eval (IntOpExp op e1 e2) env = undefined
+eval (IntOpExp op e1 e2) env =
+    let v1 = eval e1 env
+        v2 = eval e2 env
 
 --- ### Boolean and Comparison Operators
 
