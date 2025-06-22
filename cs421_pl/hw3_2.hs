@@ -33,3 +33,13 @@ eval (VarExp var) env =
     case lookup var env of 
         Just val -> val
         Nothing -> IntVal 0
+
+
+eval (IfExp e1 e2 e3) env =
+    let boolval = eval e1 env
+    in case boolval of
+        BoolVal True -> eval e2 env
+        BoolVal False -> eval e3 env
+        IntVal 0 -> eval e3 env
+        IntVal _ -> eval e2 env
+        exnVal -> exnVal
