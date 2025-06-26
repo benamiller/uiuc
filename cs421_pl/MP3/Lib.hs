@@ -70,7 +70,17 @@ factk x k = factk (x-1) (\v -> k (x * v))
 --- ### `evenoddk :: [Integer] -> (Integer -> t) -> (Integer -> t) -> t`
 
 evenoddk :: [Integer] -> (Integer -> t) -> (Integer -> t) -> t
-evenoddk = undefined
+evenoddk list keven kodd = aux list keven kodd
+    where
+        aux :: [Integer] -> (Integer -> t) -> (Integer -> t) -> t
+        aux [x] ke ko =
+            if even x
+                then ke x
+                else ko x
+        aux (x:xs) ke ko =
+            if even x
+                then aux xs (\v -> ke (x + v)) ko
+                else aux xs ke (\v -> ko (x + v))
 
 --- Automated Translation
 --- ---------------------
