@@ -91,7 +91,11 @@ gensym i = ("v" ++ show i, i + 1)
 --- ### Define `isSimple`
 
 isSimple :: Exp -> Bool
-isSimple = undefined
+isSimple (IntExp _) = True
+isSimple (VarExp _) = True
+isSimple (AppExp _ _) = False
+isSimple (OpExp _ e1 e2) = isSimple e1 && isSimple e2
+isSimple (IfExp cond e1 e2) = isSimple cond && isSimple e1 && isSimple e2
 
 --- ### Define `cpsExp` - Overview
 
