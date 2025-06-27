@@ -100,7 +100,35 @@ isSimple (IfExp cond e1 e2) = isSimple cond && isSimple e1 && isSimple e2
 --- ### Define `cpsExp` - Overview
 
 cpsExp :: Exp -> Exp -> Integer -> (Exp, Integer)
-cpsExp = undefined
+cpsExp exp k n = case exp of
+    IntExp _ -> (AppExp k exp, n)
+    VarExp _ -> (AppExp k exp, n)
+    AppExp f e ->
+        if isSimple e then
+            (AppExp (AppExp f e) k, n)
+        else
+            let (v, n') = gensym n
+                k' = LamExp v (AppExp (AppExp f (VarExp v)) k)
+            in cpsExp e k' n'
+    OpExp op e1 e2 ->
+        case (isSimple e1, isSimple e2) of
+            (True, True) ->
+                (AppExp k (OpExp op e1 e2), n)
+            (False, True) ->
+                let (v, n') = gensym n
+                    k' = LamExp v (AppExp k (OpExp op (VarExp v) e2))
+                in cpsExp e1 k' n'
+            (True, False) ->
+                let (v, n') = gensym n
+                    k' = LamExp v (AppExp k (OpExp op e1 (VarExp v)))
+                in cpsExp e2 k' n'
+            (False, False) ->
+                let (v1, n1) = gensym n
+                    (v2, n2) = gensym n1
+                    k_e2 = LamExp v2 (AppExp k (OpExp op (VarExp v1) (VarExp v2)))
+                    (e2_trans, n3) = cpsExp e2 k_e2 n2
+                    k_e1 = LamExp v1 e2_trans
+                in cpsExp e1 k_e1 n3
 
 --- #### Define `cpsExp` for Integer and Variable Expressions
 
