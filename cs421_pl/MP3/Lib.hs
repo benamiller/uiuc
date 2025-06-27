@@ -148,4 +148,8 @@ cpsExp exp k n = case exp of
 --- ### Define `cpsDecl`
 
 cpsDecl :: Stmt -> Stmt
-cpsDecl = undefined
+cpsDecl (Decl name params body) =
+    let newParams = params ++ ["k"]
+        initialK = VarExp "k"
+        (newBody, _) = cpsExp body initialK 0
+    in Decl name newParams newBody
