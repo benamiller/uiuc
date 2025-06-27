@@ -101,8 +101,10 @@ isSimple (IfExp cond e1 e2) = isSimple cond && isSimple e1 && isSimple e2
 
 cpsExp :: Exp -> Exp -> Integer -> (Exp, Integer)
 cpsExp exp k n = case exp of
+--- #### Define `cpsExp` for Integer and Variable Expressions
     IntExp _ -> (AppExp k exp, n)
     VarExp _ -> (AppExp k exp, n)
+--- #### Define `cpsExp` for Application Expressions
     AppExp f e ->
         if isSimple e then
             (AppExp (AppExp f e) k, n)
@@ -110,6 +112,7 @@ cpsExp exp k n = case exp of
             let (v, n') = gensym n
                 k' = LamExp v (AppExp (AppExp f (VarExp v)) k)
             in cpsExp e k' n'
+--- #### Define `cpsExp` for Operator Expressions
     OpExp op e1 e2 ->
         case (isSimple e1, isSimple e2) of
             (True, True) ->
@@ -129,14 +132,18 @@ cpsExp exp k n = case exp of
                     (e2_trans, n3) = cpsExp e2 k_e2 n2
                     k_e1 = LamExp v1 e2_trans
                 in cpsExp e1 k_e1 n3
-
---- #### Define `cpsExp` for Integer and Variable Expressions
-
---- #### Define `cpsExp` for Application Expressions
-
---- #### Define `cpsExp` for Operator Expressions
-
 --- #### Define `cpsExp` for If Expressions
+    IfExp cond e1 e2 ->
+        if isSimple cond then
+            let (t', n1) = cpsExp e1 k n
+                (e', n2) = cpsExp e2 k n1
+            in (IfExp cond t' e', n2)
+        else
+            let (v, n1) = gensym n
+                (t', n2) = cpsExp e1 k n1
+                (e', n3) = cpsExp e2 k n2
+                k' = LamExp v (IfExp (VarExp v) t' e')
+            in cpsExp cond k' n3
 
 --- ### Define `cpsDecl`
 
