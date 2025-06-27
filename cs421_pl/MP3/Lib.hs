@@ -91,7 +91,7 @@ gensym i = ("v" ++ show i, i + 1)
 --- ### Define `isSimple`
 
 isSimple :: Exp -> Bool
-isSimple = simple 
+isSimple = undefined 
 
 --- ### Define `cpsExp` - Overview
 
