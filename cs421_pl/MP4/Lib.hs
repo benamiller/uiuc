@@ -98,7 +98,10 @@ liftIntOp _  _        = Nothing
 --- ### `liftCompOp`
 
 liftCompOp :: (Integer -> Integer -> Bool) -> IStack -> Maybe IStack
-liftCompOp = undefined
+liftCompOp op (x:y:xs) =
+	case y `op` x of
+		True -> -1:xs
+		False -> 0:xs
 
 
 --- The Dictionary
