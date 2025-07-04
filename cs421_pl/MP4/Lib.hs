@@ -147,6 +147,9 @@ initComp = [ ("<", Prim $ liftIStackOp $ liftCompOp (<))
 
 initIStackOp :: Dictionary
 initIStackOp = [ ("dup",  Prim $ liftIStackOp istackDup)
+		 ("drop", Prim $ liftIStackOp istackDrop)
+		 ("swap", Prim $ liftIStackOp istackSwap)
+		 ("rot", Prim $ liftIStackOp istackRot)
                ]
 
 initPrintOp = [ (".",  Prim printPop)
