@@ -153,6 +153,7 @@ initIStackOp = [ ("dup",  Prim $ liftIStackOp istackDup)
                ]
 
 initPrintOp = [ (".",  Prim printPop)
+		(".S", Prim printStack)
               ]
 
 istackDup :: IStack -> Maybe IStack
@@ -181,7 +182,8 @@ printPop _ = underflow
 --- ### Printing the Stack
 
 printStack :: ForthState -> ForthState
-printStack (istack, dict, out) = undefined
+printStack (istack, dict, out) =
+    (istack, dict, unwords (map show (reverse istack)) : out)
 
 --- Evaluator
 --- ---------
