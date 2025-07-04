@@ -161,7 +161,8 @@ istackSwap (x:y:xs) = Just (y:x:xs)
 istackSwap _ = Nothing
 
 istackDrop :: IStack -> Maybe IStack
-istackDrop = undefined
+istackDrop (_:xs) = Just (xs)
+istackDrop [] = Nothing
 
 istackRot :: IStack -> Maybe IStack
 istackRot = undefined
