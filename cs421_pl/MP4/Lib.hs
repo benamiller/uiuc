@@ -234,10 +234,10 @@ cstackNext _ = Nothing
 --- ### Conditionals
 
 cstackIf :: CStack -> Maybe CStack
-cstackIf cstack = undefined
+cstackIf cstack = Just $ ("if", id) : cstack
 
 cstackElse :: CStack -> Maybe CStack
-cstackElse cstack@(("if", _):_) = undefined
+cstackElse cstack@(("if", kif):rest) = Just $ ("else", id) : ("if", kif) : rest
 cstackElse _ = Nothing
 
 cstackThen :: CStack -> Maybe CStack
