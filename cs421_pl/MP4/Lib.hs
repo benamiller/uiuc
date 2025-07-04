@@ -233,6 +233,14 @@ cstackNext _ = Nothing
 
 --- ### Conditionals
 
+transIfElse :: Transition -> Transition -> Transition
+transIfElse kif kelse state /
+    case state of
+	(i:is, d, o) -> if i /= 0
+			then kif (is, d, o)
+			else kelse (is, d, o)
+	_ -> underflow
+
 cstackIf :: CStack -> Maybe CStack
 cstackIf cstack = Just $ ("if", id) : cstack
 
@@ -241,8 +249,12 @@ cstackElse cstack@(("if", kif):rest) = Just $ ("else", id) : ("if", kif) : rest
 cstackElse _ = Nothing
 
 cstackThen :: CStack -> Maybe CStack
-cstackThen (("else", kelse):("if", kif):(c, kold):cstack) = undefined
-cstackThen (("if", kif):(c, kold):cstack) = undefined
+cstackThen (("else", kelse):("if", kif):(c, kold):cstack) =
+    let knew = (transIfElse kif kelse) . kold
+    in Just ((c, knew):cstack)
+cstackThen (("if", kif):(c, kold):cstack) =
+    let knew = (transIfElse kif id) . kold
+    in Just ((c, knew):cstack)
 cstackThen _ = Nothing
 
 --- ### Indefinite Loops
