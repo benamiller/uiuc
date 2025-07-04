@@ -124,36 +124,41 @@ initCompileOp = [ (":",    Define)
                 ]
 
 --- ### Arithmetic Operators
+istackDiv :: IStack -> Maybe IStack
+istackDiv (x:y:xs)
+	| x == 0 = Nothing
+	| otherwise = Just $ (y `div` x) : xs
+istackDiv _ = Nothing
 
 initArith :: Dictionary
 initArith = [ ("+",  Prim $ liftIStackOp $ liftIntOp (+))
 	    , ("-", Prim $ liftIStackOp $ liftIntOp (-))
 	    , ("*", Prim $ liftIStackOp $ liftIntOp (*))
-	    , ("/" Prim $ liftIStackOp $ liftIntOp (/))
+	    , ("/", Prim $ liftIStackOp istackDiv) 
             ]
 
 --- ### Comparison Operators
 
 initComp :: Dictionary
 initComp = [ ("<", Prim $ liftIStackOp $ liftCompOp (<))
-	     (">", Prim $ liftIStackOp $ liftCompOp (>))
-	     ("<=", Prim $ liftIStackOp $ liftCompOp (<=))
-	     (">=", Prim $ liftIStackOp $ liftCompOp (>=))
-	     ("=", Prim $ liftIStackOp $ liftCompOp (==))
-	     ("!=", Prim $ liftIStackOp $ liftCompOp (/=))
+	   , (">", Prim $ liftIStackOp $ liftCompOp (>))
+	   , ("<=", Prim $ liftIStackOp $ liftCompOp (<=))
+	   , (">=", Prim $ liftIStackOp $ liftCompOp (>=))
+	   , ("=", Prim $ liftIStackOp $ liftCompOp (==))
+	   , ("!=", Prim $ liftIStackOp $ liftCompOp (/=))
            ]
 
 --- ### Stack Manipulations
 
 initIStackOp :: Dictionary
 initIStackOp = [ ("dup",  Prim $ liftIStackOp istackDup)
-		 ("drop", Prim $ liftIStackOp istackDrop)
-		 ("swap", Prim $ liftIStackOp istackSwap)
-		 ("rot", Prim $ liftIStackOp istackRot)
+               , ("drop", Prim $ liftIStackOp istackDrop)
+               , ("swap", Prim $ liftIStackOp istackSwap)
+               , ("rot", Prim $ liftIStackOp istackRot)
                ]
 
 initPrintOp = [ (".",  Prim printPop)
-		(".S", Prim printStack)
+              , (".S", Prim printStack)
               ]
 
 istackDup :: IStack -> Maybe IStack
@@ -234,12 +239,12 @@ cstackNext _ = Nothing
 --- ### Conditionals
 
 transIfElse :: Transition -> Transition -> Transition
-transIfElse kif kelse state /
+transIfElse kif kelse state =
     case state of
-	(i:is, d, o) -> if i /= 0
-			then kif (is, d, o)
-			else kelse (is, d, o)
-	_ -> underflow
+        (i:is, d, o) -> if i /= 0
+            then kif (is, d, o)
+            else kelse (is, d, o)
+        _ -> underflow
 
 cstackIf :: CStack -> Maybe CStack
 cstackIf cstack = Just $ ("if", id) : cstack
@@ -256,6 +261,7 @@ cstackThen (("if", kif):(c, kold):cstack) =
     let knew = (transIfElse kif id) . kold
     in Just ((c, knew):cstack)
 cstackThen _ = Nothing
+
 
 --- ### Indefinite Loops
 
