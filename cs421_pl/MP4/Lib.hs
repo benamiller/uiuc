@@ -165,7 +165,8 @@ istackDrop (_:xs) = Just (xs)
 istackDrop [] = Nothing
 
 istackRot :: IStack -> Maybe IStack
-istackRot = undefined
+istackRot (x:y:z:xs) = Just (z:x:y:xs)
+istackRot _ = Nothing
 
 --- ### Popping the Stack
 
