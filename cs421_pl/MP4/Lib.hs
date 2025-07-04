@@ -135,7 +135,13 @@ initArith = [ ("+",  Prim $ liftIStackOp $ liftIntOp (+))
 --- ### Comparison Operators
 
 initComp :: Dictionary
-initComp = []
+initComp = [ ("<", Prim $ liftIStackOp $ liftCompOp (<))
+	     (">", Prim $ liftIStackOp $ liftCompOp (>))
+	     ("<=", Prim $ liftIStackOp $ liftCompOp (<=))
+	     (">=", Prim $ liftIStackOp $ liftCompOp (>=))
+	     ("=", Prim $ liftIStackOp $ liftCompOp (==))
+	     ("!=", Prim $ liftIStackOp $ liftCompOp (/=))
+           ]
 
 --- ### Stack Manipulations
 
