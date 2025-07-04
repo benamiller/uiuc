@@ -99,9 +99,10 @@ liftIntOp _  _        = Nothing
 
 liftCompOp :: (Integer -> Integer -> Bool) -> IStack -> Maybe IStack
 liftCompOp op (x:y:xs) =
-	case y `op` x of
-		True -> -1:xs
-		False -> 0:xs
+	Just $ if y `op` x
+		then -1:xs
+		else 0:xs
+liftCompOp _ _ = Nothing
 
 
 --- The Dictionary
@@ -126,6 +127,9 @@ initCompileOp = [ (":",    Define)
 
 initArith :: Dictionary
 initArith = [ ("+",  Prim $ liftIStackOp $ liftIntOp (+))
+	    , ("-", Prim $ liftIStackOp $ liftIntOp (-))
+	    , ("*", Prim $ liftIStackOp $ liftIntOp (*))
+	    , ("/" Prim $ liftIStackOp $ liftIntOp (/))
             ]
 
 --- ### Comparison Operators
