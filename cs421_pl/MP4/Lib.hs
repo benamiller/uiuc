@@ -157,7 +157,8 @@ istackDup (i:is) = Just $ i:i:is
 istackDup _      = Nothing
 
 istackSwap :: IStack -> Maybe IStack
-istackSwap = undefined
+istackSwap (x:y:xs) = Just (y:x:xs)
+istackSwap _ = Nothing
 
 istackDrop :: IStack -> Maybe IStack
 istackDrop = undefined
