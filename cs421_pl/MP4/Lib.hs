@@ -259,11 +259,22 @@ cstackThen _ = Nothing
 
 --- ### Indefinite Loops
 
+transUntil :: Transition -> Transition
+transUntil kloop state =
+    let stateAfterLoopBody = kloop state
+    in case stateAfterLoopBody of
+	(i:is, d, o) -> if i == 0
+			then transUntil kloop (is, d, o)
+			else (is, d, o)
+	_ -> underflow
+
 cstackBegin :: CStack -> Maybe CStack
 cstackBegin cstack = Just $ ("begin", id):cstack
 
 cstackUntil :: CStack -> Maybe CStack
-cstackUntil (("begin", kloop):(c, kold):cstack) = undefined
+cstackUntil (("begin", kloop):(c, kold):cstack) =
+    let knew = (transUntil kloop) . kold
+    in Just ((c, knew):cstack)
 cstackUntil _ = Nothing
 
 
