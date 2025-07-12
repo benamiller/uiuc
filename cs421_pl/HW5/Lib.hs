@@ -8,7 +8,7 @@ data Calc a = Add a
    deriving (Eq,Show)
 
 
-calc :: Num a => [Calc a] -> a -> (a -> a) -> (a -> a) -> a
+calc :: (Num a, Ord a) => [Calc a] -> a -> (a -> a) -> (a -> a) -> a
 calc xx init ka ks = aux init xx
      where aux a [] = ks a
            aux a ((Add i):xs) = aux (a + i) xs
