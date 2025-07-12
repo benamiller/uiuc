@@ -9,5 +9,9 @@ data Calc a = Add a
 
 
 calc :: Num a => [Calc a] -> a -> (a -> a) -> (a -> a) -> a
-calc = undefined
-
+calc xx init ka ks = aux init xx
+     where aux a [] = ks a
+           aux a ((Add i):xs) = aux (a + i) xs
+           aux a ((Sub i):xs)
+               | a >= i = aux (a - i) xs
+               | otherwise = ka a
